@@ -8,7 +8,7 @@ const products = [
   { id: 3, name: "Huevos", price: 3.0, image: "https://via.placeholder.com/150" },
   { id: 4, name: "Arroz", price: 1.2, image: "https://via.placeholder.com/150" },
   { id: 5, name: "Carne", price: 10.5, image: "https://via.placeholder.com/150" },
-  { id: 6, name: "Queso", price: 4.5, image: "https://via.placeholder.com/150" },
+  { id: 6, name: "Queso", price: 5.5, image: "https://via.placeholder.com/150" },
   { id: 7, name: "Mantequilla", price: 2.5, image: "https://via.placeholder.com/150" },
   { id: 8, name: "Aceite", price: 5.0, image: "https://via.placeholder.com/150" },
   { id: 9, name: "Azúcar", price: 1.8, image: "https://via.placeholder.com/150" },
