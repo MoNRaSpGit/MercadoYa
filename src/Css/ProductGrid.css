@@ -1,18 +1,15 @@
-.card {
-    transition: transform 0.2s ease-in-out;
+
+  /* Aumentar el espaciado entre tarjetas en móviles */
+@media (max-width: 576px) {
+  .card {
+    margin-bottom: 1.5rem;
   }
-  
-  .card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .card-title {
-    font-weight: bold;
-  }
-  
-  .card-text {
-    font-size: 1.1rem;
-    color: #555;
-  }
-  
+}
+
+/* Ajustar tamaño de fuente en móviles */
+.card-title {
+  font-size: 1rem;
+}
+.card-text {
+  font-size: 0.9rem;
+}
