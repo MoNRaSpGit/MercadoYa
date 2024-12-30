@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const API_URL = process.env.REACT_APP_API_URL_LOCAL;
+//const API_URL = process.env.REACT_APP_API_URL_LOCAL;
+const API_URL = process.env.REACT_APP_API_URL_PRODUCTION
+
+
 
 // Thunk para confirmar el pedido y enviarlo al backend
 export const confirmarPedidoAsync = createAsyncThunk(
