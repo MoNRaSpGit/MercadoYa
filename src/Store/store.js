@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import productSlice from '../Slice/productoSlice';
+import productReducer from '../Slice/productoSlice';
+import pedidoReducer from '../Slice/pedidoSlice'; // Importa el slice de pedidos
 
 const store = configureStore({
   reducer: {
-    products: productSlice,
+    products: productReducer,
+    pedidos: pedidoReducer, // Agrega el slice de pedidos
   },
 });
 

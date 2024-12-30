@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 // Agrega un log para confirmar que `index.js` se carga
-console.log('Index cargado');
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

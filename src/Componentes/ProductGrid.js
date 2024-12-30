@@ -7,22 +7,22 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import '../Css/ProductGrid.css';
 
 const ProductGrid = () => {
-  console.log('ProductGrid montado');
+ 
 
   const dispatch = useDispatch();
   const { items: products, cart, loading, error } = useSelector((state) => state.products);
 
   useEffect(() => {
-    console.log('Despachando fetchProducts');
+   
     dispatch(fetchProducts());
   }, [dispatch]);
 
   const handleAddToCart = (product) => {
-    console.log('Producto seleccionado:', product);
+    
     dispatch(addToCart(product));
   };
 
-  console.log('Productos actuales en el estado:', products);
+ 
 
   if (loading) {
     return <div className="text-center">Cargando productos...</div>;

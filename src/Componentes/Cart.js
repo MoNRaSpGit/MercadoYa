@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+//import { confirmarPedido } from '../Slice/pedidoSlice';
+import { useNavigate } from 'react-router-dom';
+import { confirmarPedidoAsync } from '../Slice/pedidoSlice';
 
 const Cart = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const loading = useSelector((state) => state.pedidos.loading);
+
+
   const { cart } = useSelector((state) => state.products);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [cashGiven, setCashGiven] = useState('');
@@ -10,6 +18,26 @@ const Cart = () => {
 
   // Calcula el total del carrito
   const total = cart.reduce((acc, product) => acc + parseFloat(product.price), 0);
+
+
+  const handleConfirmarCompra = () => {
+    if (cart.length === 0) {
+      alert('El carrito está vacío');
+      return;
+    }
+
+    const nuevoPedido = {
+      userId: 1, // Cambia esto por el ID real del usuario autenticado
+      products: cart.map((producto) => ({
+        id: producto.id,
+        quantity: 1, // Cambia según sea necesario
+        price: producto.price,
+      })),
+    };
+
+    //console.log('Despachando confirmarPedidoAsync con:', nuevoPedido);
+    dispatch(confirmarPedidoAsync(nuevoPedido));
+  };
 
   const handlePaymentChange = (event) => {
     const method = event.target.value;
@@ -140,7 +168,16 @@ const Cart = () => {
 
       {/* Botones de Confirmación y Volver */}
       <div className="text-center mt-4">
-        <button className="btn btn-success btn-lg me-2">Confirmar Compra</button>
+      <button
+        onClick={handleConfirmarCompra}
+        className="btn btn-success"
+        disabled={loading}
+      >
+        {loading ? 'Confirmando...' : 'Confirmar Compra'}
+      </button>
+      <button onClick={() => navigate('/pedidos')} className="btn btn-primary mt-3">
+        Ver Pedidos
+      </button>
         <Link to="/" className="btn btn-secondary btn-lg">
           Volver a la Lista de Productos
         </Link>
