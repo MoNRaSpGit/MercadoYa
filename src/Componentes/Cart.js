@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-//import { confirmarPedido } from '../Slice/pedidoSlice';
 import { useNavigate } from 'react-router-dom';
 import { confirmarPedidoAsync } from '../Slice/pedidoSlice';
 
@@ -10,7 +9,6 @@ const Cart = () => {
   const navigate = useNavigate();
   const loading = useSelector((state) => state.pedidos.loading);
 
-
   const { cart } = useSelector((state) => state.products);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [cashGiven, setCashGiven] = useState('');
@@ -18,7 +16,6 @@ const Cart = () => {
 
   // Calcula el total del carrito
   const total = cart.reduce((acc, product) => acc + parseFloat(product.price), 0);
-
 
   const handleConfirmarCompra = () => {
     if (cart.length === 0) {
@@ -35,7 +32,6 @@ const Cart = () => {
       })),
     };
 
-    //console.log('Despachando confirmarPedidoAsync con:', nuevoPedido);
     dispatch(confirmarPedidoAsync(nuevoPedido));
   };
 
@@ -168,16 +164,16 @@ const Cart = () => {
 
       {/* Botones de Confirmación y Volver */}
       <div className="text-center mt-4">
-      <button
-        onClick={handleConfirmarCompra}
-        className="btn btn-success"
-        disabled={loading}
-      >
-        {loading ? 'Confirmando...' : 'Confirmar Compra'}
-      </button>
-      <button onClick={() => navigate('/pedidos')} className="btn btn-primary mt-3">
-        Ver Pedidos
-      </button>
+        <button
+          onClick={handleConfirmarCompra}
+          className="btn btn-success"
+          disabled={loading}
+        >
+          {loading ? 'Confirmando...' : 'Confirmar Compra'}
+        </button>
+        <button onClick={() => navigate('/ordenes')} className="btn btn-primary mt-3">
+          Ver Ordenes
+        </button>
         <Link to="/" className="btn btn-secondary btn-lg">
           Volver a la Lista de Productos
         </Link>

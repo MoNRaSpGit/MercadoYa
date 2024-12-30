@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPedidosAsync, actualizarEstadoPedidoAsync } from '../Slice/pedidoSlice';
+import { fetchPedidosAsync, actualizarEstadoPedidoAsync, eliminarPedidoAsync } from '../Slice/pedidoSlice';
 
 const Pedidos = () => {
     const dispatch = useDispatch();
@@ -8,25 +8,32 @@ const Pedidos = () => {
     const loading = useSelector((state) => state.pedidos.loading);
 
     useEffect(() => {
-        // console.log('Montando el componente Pedidos. Despachando fetchPedidosAsync.');
+        console.log('Montando el componente Pedidos. Despachando fetchPedidosAsync.');
         dispatch(fetchPedidosAsync());
-        return () => {
-            // console.log('Desmontando el componente Pedidos.');
-        };
     }, [dispatch]);
 
-    // Log para verificar los pedidos que llegan al componente
-    //console.log('Soy los pedidos en el comp pedidos:', pedidos);
+    const handleCambiarEstado = async (pedido) => {
+        if (pedido.status === 'Listo') {
+            const confirmacion = window.confirm(`El pedido ${pedido.id} ya está listo. ¿Desea eliminarlo?`);
+            if (confirmacion) {
+                console.log(`Eliminando el pedido ${pedido.id}.`);
+                await dispatch(eliminarPedidoAsync(pedido.id));
+                console.log('Pedido eliminado. Volviendo a cargar pedidos.');
+                dispatch(fetchPedidosAsync()); // Recarga la lista de pedidos
+            }
+            return;
+        }
 
-    const handleCambiarEstado = (pedido) => {
         const nuevosEstados = ['Pendiente', 'Procesando', 'Listo'];
         const estadoActual = pedido.status;
         const indiceActual = nuevosEstados.indexOf(estadoActual);
         const nuevoEstado = nuevosEstados[(indiceActual + 1) % nuevosEstados.length];
 
-        // console.log(`Cambiando estado del pedido ${pedido.id} a ${nuevoEstado}`);
-        dispatch(actualizarEstadoPedidoAsync({ id: pedido.id, nuevoEstado }));
+        console.log(`Cambiando estado del pedido ${pedido.id} a ${nuevoEstado}`);
+        await dispatch(actualizarEstadoPedidoAsync({ id: pedido.id, nuevoEstado }));
     };
+
+    console.log('Renderizando Pedidos. Estado actual de pedidos:', pedidos);
 
     return (
         <div className="container mt-4">
@@ -52,7 +59,11 @@ const Pedidos = () => {
                             </p>
                             <button
                                 type="button"
-                                onClick={() => handleCambiarEstado(pedido)} // Directamente pasa la función sin event.preventDefault
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    event.preventDefault();
+                                    handleCambiarEstado(pedido);
+                                }}
                                 className="btn btn-primary mt-2"
                             >
                                 Cambiar Estado

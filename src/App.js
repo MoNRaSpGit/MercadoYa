@@ -4,6 +4,7 @@ import Home from './Componentes/Home';
 import ProductGrid from './Componentes/ProductGrid';
 import Cart from './Componentes/Cart';
 import Pedidos from './Componentes/Pedidos'; // Importa el componente Pedidos
+import Ordenes from './Componentes/Ordenes'; // Importa el nuevo componente Ordenes
 
 const App = () => {
   return (
@@ -20,7 +21,10 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
 
           {/* Pedidos */}
-          <Route path="/pedidos" element={<Pedidos />} /> {/* Nueva ruta para pedidos */}
+          <Route path="/pedidos" element={<Pedidos />} /> {/* Ruta para pedidos */}
+
+          {/* Ordenes */}
+          <Route path="/ordenes" element={<Ordenes />} /> {/* Nueva ruta para ordenes */}
 
           {/* Página 404 */}
           <Route path="*" element={<div>404 - Página no encontrada</div>} />
