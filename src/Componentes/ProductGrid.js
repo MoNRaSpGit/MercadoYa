@@ -1,28 +1,18 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts, addToCart } from '../Slice/productoSlice';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addToCart } from '../Slice/productoSlice';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import '../Css/ProductGrid.css';
 
 const ProductGrid = () => {
- 
-
   const dispatch = useDispatch();
   const { items: products, cart, loading, error } = useSelector((state) => state.products);
 
-  useEffect(() => {
-   
-    dispatch(fetchProducts());
-  }, [dispatch]);
-
   const handleAddToCart = (product) => {
-    
     dispatch(addToCart(product));
   };
-
- 
 
   if (loading) {
     return <div className="text-center">Cargando productos...</div>;

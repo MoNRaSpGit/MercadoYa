@@ -1,87 +1,74 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const [message, setMessage] = useState("");
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:3001/api/register", formData)
-      .then((response) => {
-        setMessage("Registro exitoso. ¡Puedes iniciar sesión ahora!");
-        setFormData({ name: "", email: "", password: "" });
-      })
-      .catch((error) => {
-        setMessage("Error al registrar. Por favor, intenta nuevamente.");
-        console.error("Error en el registro:", error);
-      });
+
+    // Simular registro de usuario
+    if (username && password && email) {
+      console.log('Usuario registrado:', { username, email });
+      navigate('/'); // Redirigir al login después del registro
+    } else {
+      setError('Por favor, completa todos los campos.');
+    }
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Registro de Usuario</h2>
-      {message && <div className="alert alert-info text-center">{message}</div>}
-      <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: "400px" }}>
-        <div className="mb-3">
-          <label htmlFor="name" className="form-label">
-            Nombre
-          </label>
+    <div className="container d-flex flex-column align-items-center justify-content-center vh-100 text-center">
+      <h1 className="display-4">Regístrate</h1>
+      <form onSubmit={handleRegister} className="mt-4 w-50">
+        <div className="form-group mb-3">
           <input
             type="text"
-            id="name"
-            name="name"
             className="form-control"
-            value={formData.name}
-            onChange={handleChange}
+            placeholder="Usuario"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Correo Electrónico
-          </label>
+        <div className="form-group mb-3">
           <input
             type="email"
-            id="email"
-            name="email"
             className="form-control"
-            value={formData.email}
-            onChange={handleChange}
+            placeholder="Correo electrónico"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Contraseña
-          </label>
+        <div className="form-group mb-3">
           <input
             type="password"
-            id="password"
-            name="password"
             className="form-control"
-            value={formData.password}
-            onChange={handleChange}
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary w-100">
+        <button type="submit" className="btn btn-success btn-lg">
           Registrarse
         </button>
+        {error && <p className="text-danger mt-3">{error}</p>}
       </form>
+      <p className="mt-4">
+        ¿Ya tienes una cuenta?{' '}
+        <span
+          className="text-primary"
+          style={{ cursor: 'pointer' }}
+          onClick={() => navigate('/')}
+        >
+          Inicia sesión
+        </span>
+      </p>
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
+//REACT_APP_API_URL_LOCAL
+//REACT_APP_API_URL_PRODUCTION
 
 // Thunk para confirmar el pedido y enviarlo al backend
 export const confirmarPedidoAsync = createAsyncThunk(
@@ -98,7 +100,10 @@ const pedidoSlice = createSlice({
       // CONFIRMAR PEDIDO
       .addCase(confirmarPedidoAsync.fulfilled, (state, action) => {
         console.log('Pedido confirmado:', action.payload);
-        state.lista.push(action.payload); // Agrega el nuevo pedido a la lista
+        const existe = state.lista.some((pedido) => pedido.id === action.payload.id);
+        if (!existe) {
+          state.lista.push(action.payload); // Solo agrega si no existe
+        }
       })
       .addCase(confirmarPedidoAsync.rejected, (state, action) => {
         console.error('Error al confirmar pedido:', action.payload);

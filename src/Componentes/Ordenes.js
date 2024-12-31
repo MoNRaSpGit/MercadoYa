@@ -10,6 +10,7 @@ const Ordenes = () => {
   const dispatch = useDispatch();
   const pedidos = useSelector((state) => state.pedidos.lista); // Lista de pedidos desde el store
   const loading = useSelector((state) => state.pedidos.loading); // Solo para la carga inicial de pedidos
+  const error = useSelector((state) => state.pedidos.error); // Error global de pedidos
 
   // Carga inicial de pedidos
   useEffect(() => {
@@ -56,8 +57,13 @@ const Ordenes = () => {
   return (
     <div className="container mt-4">
       <h2 className="text-center mb-4">Lista de Órdenes</h2>
+
       {loading ? (
         <p className="text-center">Cargando órdenes...</p>
+      ) : error ? (
+        <p className="text-center text-danger">
+          Error al cargar órdenes: {error}
+        </p>
       ) : pedidos.length === 0 ? (
         <p className="text-center">No hay órdenes confirmadas aún.</p>
       ) : (
