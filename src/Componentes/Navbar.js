@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <div className="container">
-        <Link className="navbar-brand" to="/">MercadoYa</Link>
+      <div className="container-fluid">
+        <Link className="navbar-brand" to="/">
+          MercadoYa
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -20,16 +22,19 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link className="nav-link" to="/">Inicio</Link>
+              <Link className="nav-link" to="/products">
+                Productos
+              </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/products">Productos</Link>
+              <Link className="nav-link" to="/ordenes">
+                Órdenes
+              </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/ordenes">Órdenes</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/scan">Escáner</Link>
+              <Link className="nav-link" to="/scan">
+                Escáner
+              </Link>
             </li>
           </ul>
         </div>
