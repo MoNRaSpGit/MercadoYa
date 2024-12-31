@@ -1,9 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-//const API_URL = process.env.REACT_APP_API_URL_LOCAL;
-const API_URL = process.env.REACT_APP_API_URL_PRODUCTION
-
-
+const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
 
 // Thunk para confirmar el pedido y enviarlo al backend
 export const confirmarPedidoAsync = createAsyncThunk(
@@ -62,7 +59,6 @@ export const actualizarEstadoPedidoAsync = createAsyncThunk(
         throw new Error('Error al actualizar el estado del pedido');
       }
 
-      const data = await response.json();
       return { id, nuevoEstado };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -91,87 +87,58 @@ export const eliminarPedidoAsync = createAsyncThunk(
 );
 
 const pedidoSlice = createSlice({
-    name: 'pedidos',
-    initialState: {
-      lista: [],
-      loading: false,
-      error: null,
-    },
-    reducers: {},
-    extraReducers: (builder) => {
-      // 1. CONFIRMAR PEDIDO
-      builder
-        .addCase(confirmarPedidoAsync.pending, (state) => {
-          console.log('confirmarPedidoAsync.pending');
-          state.loading = true;
-          state.error = null;
-        })
-        .addCase(confirmarPedidoAsync.fulfilled, (state, action) => {
-          console.log('confirmarPedidoAsync.fulfilled:', action.payload);
-          state.loading = false;
-          state.lista.push(action.payload);
-        })
-        .addCase(confirmarPedidoAsync.rejected, (state, action) => {
-          console.log('confirmarPedidoAsync.rejected:', action.payload);
-          state.loading = false;
-          state.error = action.payload;
-        })
-  
-      // 2. OBTENER PEDIDOS
-        .addCase(fetchPedidosAsync.pending, (state) => {
-          console.log('fetchPedidosAsync.pending');
-          state.loading = true;
-          state.error = null;
-        })
-        .addCase(fetchPedidosAsync.fulfilled, (state, action) => {
-          console.log('fetchPedidosAsync.fulfilled:', action.payload);
-          state.loading = false;
-          state.lista = action.payload;
-        })
-        .addCase(fetchPedidosAsync.rejected, (state, action) => {
-          console.log('fetchPedidosAsync.rejected:', action.payload);
-          state.loading = false;
-          state.error = action.payload;
-        })
-  
-      // 3. ACTUALIZAR ESTADO
-        .addCase(actualizarEstadoPedidoAsync.pending, (state) => {
-          console.log('actualizarEstadoPedidoAsync.pending');
-          state.loading = true;
-          state.error = null;
-        })
-        .addCase(actualizarEstadoPedidoAsync.fulfilled, (state, action) => {
-          console.log('actualizarEstadoPedidoAsync.fulfilled:', action.payload);
-          state.loading = false;
-          const { id, nuevoEstado } = action.payload;
-          const pedido = state.lista.find((p) => p.id === id);
-          if (pedido) {
-            pedido.status = nuevoEstado;
-          }
-        })
-        .addCase(actualizarEstadoPedidoAsync.rejected, (state, action) => {
-          console.log('actualizarEstadoPedidoAsync.rejected:', action.payload);
-          state.loading = false;
-          state.error = action.payload;
-        })
-  
-      // 4. ELIMINAR PEDIDO
-        .addCase(eliminarPedidoAsync.pending, (state) => {
-          console.log('eliminarPedidoAsync.pending');
-          state.loading = true;
-          state.error = null;
-        })
-        .addCase(eliminarPedidoAsync.fulfilled, (state, action) => {
-          console.log('eliminarPedidoAsync.fulfilled:', action.payload);
-          state.loading = false;
-          state.lista = state.lista.filter((pedido) => pedido.id !== action.payload);
-        })
-        .addCase(eliminarPedidoAsync.rejected, (state, action) => {
-          console.log('eliminarPedidoAsync.rejected:', action.payload);
-          state.loading = false;
-          state.error = action.payload;
-        });
-    },
-  });
-//export const { cambiarEstadoLocal } = pedidoSlice.actions;
+  name: 'pedidos',
+  initialState: {
+    lista: [], // Lista de pedidos
+    error: null, // Estado para manejar errores
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      // CONFIRMAR PEDIDO
+      .addCase(confirmarPedidoAsync.fulfilled, (state, action) => {
+        console.log('Pedido confirmado:', action.payload);
+        state.lista.push(action.payload); // Agrega el nuevo pedido a la lista
+      })
+      .addCase(confirmarPedidoAsync.rejected, (state, action) => {
+        console.error('Error al confirmar pedido:', action.payload);
+        state.error = action.payload;
+      })
+
+      // OBTENER PEDIDOS
+      .addCase(fetchPedidosAsync.fulfilled, (state, action) => {
+        console.log('Pedidos obtenidos:', action.payload);
+        state.lista = action.payload; // Actualiza la lista de pedidos
+      })
+      .addCase(fetchPedidosAsync.rejected, (state, action) => {
+        console.error('Error al obtener pedidos:', action.payload);
+        state.error = action.payload;
+      })
+
+      // ACTUALIZAR ESTADO
+      .addCase(actualizarEstadoPedidoAsync.fulfilled, (state, action) => {
+        console.log('Estado de pedido actualizado:', action.payload);
+        const { id, nuevoEstado } = action.payload;
+        const pedido = state.lista.find((p) => p.id === id);
+        if (pedido) {
+          pedido.status = nuevoEstado; // Actualiza el estado del pedido
+        }
+      })
+      .addCase(actualizarEstadoPedidoAsync.rejected, (state, action) => {
+        console.error('Error al actualizar estado del pedido:', action.payload);
+        state.error = action.payload;
+      })
+
+      // ELIMINAR PEDIDO
+      .addCase(eliminarPedidoAsync.fulfilled, (state, action) => {
+        console.log('Pedido eliminado:', action.payload);
+        state.lista = state.lista.filter((pedido) => pedido.id !== action.payload); // Elimina el pedido de la lista
+      })
+      .addCase(eliminarPedidoAsync.rejected, (state, action) => {
+        console.error('Error al eliminar pedido:', action.payload);
+        state.error = action.payload;
+      });
+  },
+});
+
 export default pedidoSlice.reducer;

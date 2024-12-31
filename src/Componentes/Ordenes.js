@@ -8,10 +8,10 @@ import {
 
 const Ordenes = () => {
   const dispatch = useDispatch();
-  const pedidos = useSelector((state) => state.pedidos.lista);
-  const loading = useSelector((state) => state.pedidos.loading);
+  const pedidos = useSelector((state) => state.pedidos.lista); // Lista de pedidos desde el store
+  const loading = useSelector((state) => state.pedidos.loading); // Solo para la carga inicial de pedidos
 
-  // Carga inicial
+  // Carga inicial de pedidos
   useEffect(() => {
     console.log('Ordenes: Montando componente. Dispatch fetchPedidosAsync');
     dispatch(fetchPedidosAsync())
@@ -20,25 +20,10 @@ const Ordenes = () => {
       .catch((err) => console.error('Ordenes: fetchPedidosAsync error', err));
   }, [dispatch]);
 
-  // Cambiar estado o eliminar
+  // Función para cambiar el estado de un pedido
   const handleCambiarEstado = async (pedido) => {
     console.log('Ordenes: handleCambiarEstado para pedido', pedido);
 
-    // Si está "Listo", preguntar confirmación para eliminar
-    if (pedido.status === 'Listo') {
-      const confirmacion = window.confirm(`El pedido ${pedido.id} está listo. ¿Desea eliminarlo?`);
-      if (confirmacion) {
-        try {
-            await dispatch(eliminarPedidoAsync(pedido.id)).unwrap();
-            console.log('Ordenes: Pedido eliminado con éxito');
-          } catch (error) {
-            console.error('Ordenes: Error eliminando pedido', error);
-          }
-      }
-      return;
-    }
-
-    // Caso normal: cambiar estado
     const nuevosEstados = ['Pendiente', 'Procesando', 'Listo'];
     const idxActual = nuevosEstados.indexOf(pedido.status);
     const nuevoEstado = nuevosEstados[(idxActual + 1) % nuevosEstados.length];
@@ -52,15 +37,29 @@ const Ordenes = () => {
     }
   };
 
+  // Función para eliminar un pedido
+  const handleEliminarPedido = async (pedidoId) => {
+    const confirmacion = window.confirm(`¿Está seguro de eliminar el pedido ${pedidoId}?`);
+    if (!confirmacion) return;
+
+    try {
+      console.log(`Ordenes: Eliminando pedido ${pedidoId}`);
+      await dispatch(eliminarPedidoAsync(pedidoId)).unwrap();
+      console.log('Ordenes: Pedido eliminado con éxito');
+    } catch (error) {
+      console.error('Ordenes: Error eliminando pedido', error);
+    }
+  };
+
   console.log('Ordenes: Render', { loading, pedidos });
 
   return (
     <div className="container mt-4">
-      <h2 className="text-center mb-4">Lista de Ordenes</h2>
+      <h2 className="text-center mb-4">Lista de Órdenes</h2>
       {loading ? (
-        <p className="text-center">Cargando ordenes...</p>
+        <p className="text-center">Cargando órdenes...</p>
       ) : pedidos.length === 0 ? (
-        <p className="text-center">No hay ordenes confirmadas aún.</p>
+        <p className="text-center">No hay órdenes confirmadas aún.</p>
       ) : (
         <ul className="list-group">
           {pedidos.map((pedido) => (
@@ -70,27 +69,30 @@ const Ordenes = () => {
               <p>
                 Estado:{' '}
                 <span
-                  className={`badge ${
-                    pedido.status === 'Pendiente'
-                      ? 'bg-danger'
-                      : pedido.status === 'Procesando'
-                      ? 'bg-warning'
-                      : 'bg-success'
-                  } ml-2`}
+                  style={{
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                    color: '#fff',
+                    backgroundColor:
+                      pedido.status === 'Pendiente'
+                        ? '#d9534f'
+                        : pedido.status === 'Procesando'
+                        ? '#f0ad4e'
+                        : '#5cb85c',
+                    cursor: 'pointer',
+                    display: 'inline-block',
+                  }}
+                  onClick={() => handleCambiarEstado(pedido)} // Cambiar estado al hacer clic
                 >
                   {pedido.status}
                 </span>
               </p>
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleCambiarEstado(pedido);
-                }}
-                className="btn btn-primary mt-2"
+                className="btn btn-danger mt-2"
+                onClick={() => handleEliminarPedido(pedido.id)}
               >
-                Cambiar Estado
+                Eliminar Orden
               </button>
             </li>
           ))}
