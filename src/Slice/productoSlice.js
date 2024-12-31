@@ -9,7 +9,7 @@ export const fetchProducts = createAsyncThunk(
   async (_, thunkAPI) => {
    
     try {
-      const response = await fetch(`${API_URL}/api/products`); // Usar la variable de entorno
+      const response = await fetch(`https://mercadoya-back.onrender.com/api/products`); // Usar la variable de entorno
      
 
       if (!response.ok) {
