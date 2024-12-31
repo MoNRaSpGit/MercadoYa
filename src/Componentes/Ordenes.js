@@ -1,30 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchPedidosAsync,
-  actualizarEstadoPedidoAsync,
-  eliminarPedidoAsync,
-} from '../Slice/pedidoSlice';
+import { actualizarEstadoPedidoAsync } from '../Slice/pedidoSlice';
 
 const Ordenes = () => {
   const dispatch = useDispatch();
-  const pedidos = useSelector((state) => state.pedidos.lista); // Lista de pedidos desde el store
-  const loading = useSelector((state) => state.pedidos.loading); // Solo para la carga inicial de pedidos
-  const error = useSelector((state) => state.pedidos.error); // Error global de pedidos
+  const pedidos = useSelector((state) => state.pedidos.lista);
+  const loading = useSelector((state) => state.pedidos.loading);
+  const error = useSelector((state) => state.pedidos.error);
 
-  // Carga inicial de pedidos
-  useEffect(() => {
-    console.log('Ordenes: Montando componente. Dispatch fetchPedidosAsync');
-    dispatch(fetchPedidosAsync())
-      .unwrap()
-      .then(() => console.log('Ordenes: fetchPedidosAsync completado'))
-      .catch((err) => console.error('Ordenes: fetchPedidosAsync error', err));
-  }, [dispatch]);
-
-  // Función para cambiar el estado de un pedido
+  // Función para manejar el cambio de estado
   const handleCambiarEstado = async (pedido) => {
-    console.log('Ordenes: handleCambiarEstado para pedido', pedido);
-
     const nuevosEstados = ['Pendiente', 'Procesando', 'Listo'];
     const idxActual = nuevosEstados.indexOf(pedido.status);
     const nuevoEstado = nuevosEstados[(idxActual + 1) % nuevosEstados.length];
@@ -34,25 +19,9 @@ const Ordenes = () => {
       await dispatch(actualizarEstadoPedidoAsync({ id: pedido.id, nuevoEstado })).unwrap();
       console.log('Ordenes: Estado actualizado con éxito');
     } catch (error) {
-      console.error('Ordenes: Error actualizando estado', error);
+      console.error('Ordenes: Error al actualizar estado', error);
     }
   };
-
-  // Función para eliminar un pedido
-  const handleEliminarPedido = async (pedidoId) => {
-    const confirmacion = window.confirm(`¿Está seguro de eliminar el pedido ${pedidoId}?`);
-    if (!confirmacion) return;
-
-    try {
-      console.log(`Ordenes: Eliminando pedido ${pedidoId}`);
-      await dispatch(eliminarPedidoAsync(pedidoId)).unwrap();
-      console.log('Ordenes: Pedido eliminado con éxito');
-    } catch (error) {
-      console.error('Ordenes: Error eliminando pedido', error);
-    }
-  };
-
-  console.log('Ordenes: Render', { loading, pedidos });
 
   return (
     <div className="container mt-4">
@@ -73,7 +42,7 @@ const Ordenes = () => {
               <h5>Orden ID: {pedido.id}</h5>
               <p>Fecha: {new Date(pedido.created_at).toLocaleString()}</p>
               <p>
-                Estado:{' '}
+                Estado:{' '}  
                 <span
                   style={{
                     padding: '5px 10px',
@@ -93,13 +62,6 @@ const Ordenes = () => {
                   {pedido.status}
                 </span>
               </p>
-              <button
-                type="button"
-                className="btn btn-danger mt-2"
-                onClick={() => handleEliminarPedido(pedido.id)}
-              >
-                Eliminar Orden
-              </button>
             </li>
           ))}
         </ul>

@@ -22,7 +22,7 @@ const Cart = () => {
       alert('El carrito está vacío');
       return;
     }
-
+  
     const nuevoPedido = {
       userId: 1, // Cambia esto por el ID real del usuario autenticado
       products: cart.map((producto) => ({
@@ -31,9 +31,19 @@ const Cart = () => {
         price: producto.price,
       })),
     };
-
-    dispatch(confirmarPedidoAsync(nuevoPedido));
+  
+    dispatch(confirmarPedidoAsync(nuevoPedido))
+      .unwrap()
+      .then(() => {
+        console.log('Pedido confirmado y agregado al backend y store global.');
+        navigate('/ordenes'); // Navega después de confirmar
+      })
+      .catch((error) => {
+        console.error('Error al confirmar el pedido:', error);
+      });
   };
+  
+  
 
   const handlePaymentChange = (event) => {
     const method = event.target.value;
