@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+
+//REACT_APP_API_URL_LOCAL=http://localhost:3001
+//REACT_APP_API_URL_PRODUCTION=https://mercadoya-back.onrender.com
+
 const LaserScanner = () => {
   const [scannerInput, setScannerInput] = useState("");
   const [products, setProducts] = useState([]);
@@ -46,7 +50,7 @@ const LaserScanner = () => {
 
   const saveToDatabase = async (product) => {
     try {
-      await axios.post("http://localhost:3001/api/products", {
+      await axios.post("https://mercadoya-back.onrender.com/api/products", {
         name: product.name,
         price: product.price,
         barcode: product.barcode,

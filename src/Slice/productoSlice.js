@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Selecciona la URL según el entorno
 //process.env.REACT_APP_API_URL_PRODUCTION
-const API_URL = process.env.REACT_APP_API_URL_LOCAL;
+const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
 
 export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
