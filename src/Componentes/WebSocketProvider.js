@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { io } from "socket.io-client";
 import { añadirPedido, actualizarEstadoPedido } from "../Slice/pedidoSlice";
 
-const SOCKET_URL = "http://localhost:3001"; // Cambia la URL según tu entorno
+const SOCKET_URL = "https://mercadoya-back.onrender.com"; // Cambia la URL según tu entorno
 
 const WebSocketProvider = ({ children }) => {
   const dispatch = useDispatch();
