@@ -33,7 +33,9 @@ const AppWrapper = () => {
       if ("serviceWorker" in navigator) {
         try {
           console.log("Intentando registrar el Service Worker...");
-          const registration = await navigator.serviceWorker.register("/monraspgit.github.io/sw.js"); // Usamos el mismo origen
+          const registration = await navigator.serviceWorker.register("/MercadoYa/sw.js"); // Ruta relativa al subdirectorio
+
+                                                                
           console.log("Service Worker registrado con éxito:", registration);
 
           const permission = await Notification.requestPermission();
