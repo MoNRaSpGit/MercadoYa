@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 //REACT_APP_API_URL_LOCA
 //REACT_APP_API_URL_PRODUCTION
 
-const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
+const API_URL = REACT_APP_API_URL_PRODUCTION
 
 const LaserScanner = () => {
   const [scannerInput, setScannerInput] = useState("");

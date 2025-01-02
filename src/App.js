@@ -13,7 +13,15 @@ import Ordenes from "./Componentes/Ordenes";
 
 const publicVapidKey = "BHbacXlHjFUevRaZ4Y0G58ELSjPHf3jAITfhNoxJEKzMCY8-SGCZQNtkGdOU91ozHDSd9kW8me0k9RhAiSESmRU";
 
+
 const AppWrapper = () => {
+
+
+   //REACT_APP_API_URL_LOCAL=http://localhost:3001
+    //REACT_APP_API_URL_PRODUCTION=https://mercadoya-back.onrender.com
+
+    const API_URL = process.env.REACT_APP_API_URL_LOCAL;
+    
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,7 +42,6 @@ const AppWrapper = () => {
         try {
           console.log("Intentando registrar el Service Worker...");
           const registration = await navigator.serviceWorker.register("/MercadoYa/sw.js"); // Ruta relativa al subdirectorio
-
                                                                 
           console.log("Service Worker registrado con éxito:", registration);
 
@@ -49,7 +56,7 @@ const AppWrapper = () => {
             applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
           });
 
-          await fetch("http://localhost:3001/subscribe", {
+          await fetch(`${API_URL}/subscribe`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

@@ -7,11 +7,43 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import '../Css/ProductGrid.css';
 
 const ProductGrid = () => {
+
+ //REACT_APP_API_URL_LOCAL=http://localhost:3001
+ //REACT_APP_API_URL_PRODUCTION=https://mercadoya-back.onrender.com
+
+ const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
+
+
   const dispatch = useDispatch();
   const { items: products, cart, loading, error } = useSelector((state) => state.products);
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
+  };
+
+  const handleSendNotification = async () => {
+    try {
+      const response = await fetch(`${API_URL}/send-notification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: "¡Nueva Oferta!",
+          message: "Descubre nuestras últimas ofertas en el supermercado",
+        }),
+      });
+
+      if (response.ok) {
+        console.log("Notificación enviada con éxito");
+        alert("Notificación enviada a todos los usuarios");
+      } else {
+        console.error("Error al enviar la notificación");
+        alert("Hubo un error al enviar la notificación");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   if (loading) {
@@ -28,8 +60,11 @@ const ProductGrid = () => {
 
   return (
     <div className="container mt-4">
-      {/* Carrito */}
-      <div className="d-flex justify-content-end mb-3">
+      {/* Botón para enviar notificaciones */}
+      <div className="d-flex justify-content-between mb-3">
+        <button className="btn btn-success" onClick={handleSendNotification}>
+          Enviar Notificación a Todos
+        </button>
         <Link to="/cart" className="btn btn-outline-primary position-relative">
           <FontAwesomeIcon icon={faShoppingCart} size="lg" />
           {cart.length > 0 && (
