@@ -29,8 +29,8 @@ const ProductGrid = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: "¡Nueva Oferta!",
-          message: "Descubre nuestras últimas ofertas en el supermercado",
+          title: "¡Tu pedido!",
+          message: "Tu pedido esta prontos :D",
         }),
       });
 
