@@ -10,37 +10,54 @@ const LaserScanner = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [cajaInicial, setCajaInicial] = useState(1000);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
 
-  const generateRandomProductName = () => {
-    const productNames = [
-      "Manzana Roja",
-      "Pan Integral",
-      "Leche Descremada",
-      "Cereal Fitness",
-      "Jugo de Naranja",
-      "Galletas de Chocolate",
-      "Arroz Premium",
-      "Aceite de Oliva Extra Virgen",
-    ];
-    return productNames[Math.floor(Math.random() * productNames.length)];
+  const getStoredProduct = (barcode) => {
+    const storedProducts = JSON.parse(localStorage.getItem("products")) || {};
+    return storedProducts[barcode] || null;
   };
 
-  const generateRandomPrice = () => {
-    return parseFloat((Math.random() * 50 + 1).toFixed(2));
+  const saveProductToLocal = (product) => {
+    const storedProducts = JSON.parse(localStorage.getItem("products")) || {};
+    storedProducts[product.barcode] = product;
+    localStorage.setItem("products", JSON.stringify(storedProducts));
   };
 
   const addProduct = (barcode) => {
-    const newProduct = {
-      id: barcode,
-      barcode: barcode,
-      name: generateRandomProductName(),
-      price: generateRandomPrice(),
-      description: "Producto de alta calidad.",
-      image: null,
-    };
-    setProducts((prevProducts) => [...prevProducts, newProduct]);
-    setTotalPrice((prevTotal) => prevTotal + newProduct.price);
+    const storedProduct = getStoredProduct(barcode);
+
+    if (storedProduct) {
+      setProducts((prevProducts) => [...prevProducts, storedProduct]);
+      setTotalPrice((prevTotal) => prevTotal + storedProduct.price);
+    } else {
+      setEditingProduct({
+        id: barcode,
+        barcode: barcode,
+        name: "",
+        price: 0,
+        description: "",
+        image: null,
+      });
+    }
+  };
+
+  const handleSaveEdit = () => {
+    saveProductToLocal(editingProduct);
+    setProducts((prevProducts) => [...prevProducts, editingProduct]);
+    setTotalPrice((prevTotal) => prevTotal + editingProduct.price);
+    setEditingProduct(null);
+  };
+
+  const handleKeyDown = (e) => {
+    const char = e.key;
+
+    if (char === "Enter") {
+      const barcode = scannerInput.trim();
+      console.log("Código escaneado:", barcode);
+      addProduct(barcode);
+      setScannerInput("");
+    } else {
+      setScannerInput((prev) => prev + char);
+    }
   };
 
   const handlePay = () => {
@@ -49,63 +66,7 @@ const LaserScanner = () => {
     setTotalPrice(0);
   };
 
-  const saveToDatabase = async (product) => {
-    try {
-      const formData = new FormData();
-      formData.append("name", product.name);
-      formData.append("price", product.price);
-      formData.append("barcode", product.barcode);
-      if (product.image) {
-        formData.append("image", product.image);
-      }
-
-      await axios.post(`${API_URL}/api/products`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      alert(`Producto "${product.name}" agregado a la base de datos.`);
-    } catch (error) {
-      console.error("Error al guardar en la base de datos:", error);
-      alert("Hubo un error al guardar el producto.");
-    }
-  };
-
-  const handleEditProduct = (product) => {
-    setEditingProduct(product);
-  };
-
-  const handleSaveEdit = () => {
-    setProducts((prevProducts) =>
-      prevProducts.map((p) =>
-        p.id === editingProduct.id ? editingProduct : p
-      )
-    );
-    setEditingProduct(null);
-    setImageFile(null);
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImageFile(file);
-    setEditingProduct((prev) => ({ ...prev, image: file }));
-  };
-
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      const char = e.key;
-
-      if (char === "Enter") {
-        const barcode = scannerInput.trim();
-        console.log("Código escaneado:", barcode);
-        addProduct(barcode);
-        setScannerInput("");
-      } else {
-        setScannerInput((prev) => prev + char);
-      }
-    };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
@@ -130,18 +91,6 @@ const LaserScanner = () => {
                 <h5 className="card-title">{product.name}</h5>
                 <p className="card-text text-muted">{product.description}</p>
                 <p className="card-text fw-bold">${product.price}</p>
-                <button
-                  className="btn btn-primary mb-2"
-                  onClick={() => handleEditProduct(product)}
-                >
-                  Editar
-                </button>
-                <button
-                  className="btn btn-success mt-auto"
-                  onClick={() => saveToDatabase(product)}
-                >
-                  Agregar a la BDD
-                </button>
               </div>
             </div>
           </div>
@@ -199,11 +148,16 @@ const LaserScanner = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">Imagen</label>
-                  <input
-                    type="file"
+                  <label className="form-label">Descripción</label>
+                  <textarea
                     className="form-control"
-                    onChange={handleImageChange}
+                    value={editingProduct.description}
+                    onChange={(e) =>
+                      setEditingProduct((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
                   />
                 </div>
               </div>
@@ -215,7 +169,7 @@ const LaserScanner = () => {
                   Cancelar
                 </button>
                 <button className="btn btn-primary" onClick={handleSaveEdit}>
-                  Guardar Cambios
+                  Guardar Producto
                 </button>
               </div>
             </div>
