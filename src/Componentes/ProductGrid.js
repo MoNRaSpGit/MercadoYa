@@ -11,7 +11,7 @@ const ProductGrid = () => {
  //REACT_APP_API_URL_LOCAL=http://localhost:3001
  //REACT_APP_API_URL_PRODUCTION=https://mercadoya-back.onrender.com
 
- const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
+ //const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
 
 
   const dispatch = useDispatch();

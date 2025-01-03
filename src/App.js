@@ -13,15 +13,8 @@ import Ordenes from "./Componentes/Ordenes";
 
 const publicVapidKey = "BHbacXlHjFUevRaZ4Y0G58ELSjPHf3jAITfhNoxJEKzMCY8-SGCZQNtkGdOU91ozHDSd9kW8me0k9RhAiSESmRU";
 
-
 const AppWrapper = () => {
-
-
-   //REACT_APP_API_URL_LOCAL=http://localhost:3001
-    //REACT_APP_API_URL_PRODUCTION=https://mercadoya-back.onrender.com
-
-    const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
-    
+  const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -42,7 +35,7 @@ const AppWrapper = () => {
         try {
           console.log("Intentando registrar el Service Worker...");
           const registration = await navigator.serviceWorker.register("/MercadoYa/sw.js"); // Ruta relativa al subdirectorio
-                                                                
+
           console.log("Service Worker registrado con éxito:", registration);
 
           const permission = await Notification.requestPermission();
@@ -74,6 +67,15 @@ const AppWrapper = () => {
     };
 
     registerServiceWorker();
+
+    // Escuchar mensajes del Service Worker para reproducir sonido
+    navigator.serviceWorker.addEventListener("message", (event) => {
+      if (event.data && event.data.type === "playSound") {
+        const audio = new Audio("/MercadoYa/notiNueva.mp3");
+        audio.play().catch((err) => console.error("Error al reproducir el sonido:", err));
+      }
+    });
+
   }, [dispatch]);
 
   const urlBase64ToUint8Array = (base64String) => {
