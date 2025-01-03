@@ -33,27 +33,22 @@ const AppWrapper = () => {
     const registerServiceWorker = async () => {
       if ("serviceWorker" in navigator) {
         try {
-          const existingRegistration = await navigator.serviceWorker.getRegistration();
-          if (existingRegistration) {
-            console.log("El Service Worker ya está registrado:", existingRegistration);
-            return; // Evita registrar el mismo Service Worker varias veces
-          }
-    
           console.log("Intentando registrar el Service Worker...");
-          const registration = await navigator.serviceWorker.register("/MercadoYa/sw.js");
+          const registration = await navigator.serviceWorker.register("/MercadoYa/sw.js"); // Ruta relativa al subdirectorio
+
           console.log("Service Worker registrado con éxito:", registration);
-    
+
           const permission = await Notification.requestPermission();
           if (permission !== "granted") {
             console.warn("Permiso de notificaciones denegado.");
             return;
           }
-    
+
           const subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
           });
-    
+
           await fetch(`${API_URL}/subscribe`, {
             method: "POST",
             headers: {
@@ -61,7 +56,7 @@ const AppWrapper = () => {
             },
             body: JSON.stringify(subscription),
           });
-    
+
           console.log("Suscripción registrada con éxito:", subscription);
         } catch (error) {
           console.error("Error al registrar el Service Worker o suscripción:", error);
@@ -70,7 +65,6 @@ const AppWrapper = () => {
         console.warn("El navegador no soporta Service Workers.");
       }
     };
-    
 
     registerServiceWorker();
 
