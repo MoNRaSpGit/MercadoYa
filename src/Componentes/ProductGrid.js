@@ -1,21 +1,23 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { addToCart } from '../Slice/productoSlice';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import '../Css/ProductGrid.css';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart } from "../Slice/productoSlice";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import "../Css/ProductGrid.css";
 
 const ProductGrid = () => {
 
- //REACT_APP_API_URL_LOCAL=http://localhost:3001
+
+  //REACT_APP_API_URL_LOCAL=http://localhost:3001
  //REACT_APP_API_URL_PRODUCTION=https://mercadoya-back.onrender.com
 
  //const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
-
-
+ 
   const dispatch = useDispatch();
-  const { items: products, cart, loading, error } = useSelector((state) => state.products);
+  const { items: products, cart, loading, error } = useSelector(
+    (state) => state.products
+  );
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
@@ -23,16 +25,19 @@ const ProductGrid = () => {
 
   const handleSendNotification = async () => {
     try {
-      const response = await fetch(`https://mercadoya-back.onrender.com/send-notification`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: "¡Tu pedido!",
-          message: "Tu pedido esta prontos :D",
-        }),
-      });
+      const response = await fetch(
+        `https://mercadoya-back.onrender.com/send-notification`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: "¡Tu pedido!",
+            message: "Tu pedido está listo :D",
+          }),
+        }
+      );
 
       if (response.ok) {
         console.log("Notificación enviada con éxito");
@@ -73,6 +78,10 @@ const ProductGrid = () => {
             </span>
           )}
         </Link>
+        {/* Nuevo botón para ir al componente LaserScanner */}
+        <Link to="/laser-scanner" className="btn btn-secondary">
+          Ir a Escáner Láser
+        </Link>
       </div>
 
       {/* Productos */}
@@ -85,7 +94,7 @@ const ProductGrid = () => {
                 src={product.image}
                 className="card-img-top"
                 alt={product.name}
-                style={{ height: '150px', objectFit: 'cover' }}
+                style={{ height: "150px", objectFit: "cover" }}
               />
               <div className="card-body text-center">
                 <h5 className="card-title">{product.name}</h5>
