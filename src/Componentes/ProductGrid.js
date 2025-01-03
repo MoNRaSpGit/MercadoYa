@@ -23,7 +23,7 @@ const ProductGrid = () => {
 
   const handleSendNotification = async () => {
     try {
-      const response = await fetch(`${API_URL}/send-notification`, {
+      const response = await fetch(`https://mercadoya-back.onrender.com/send-notification`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
