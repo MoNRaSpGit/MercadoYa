@@ -5,39 +5,31 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import "../Css/ProductGrid.css";
+import Tarjetas from "../Componentes/Tarjetas"; // Importar el componente Tarjetas
 
 const ProductGrid = () => {
-
-
-  //REACT_APP_API_URL_LOCAL=http://localhost:3001
- //REACT_APP_API_URL_PRODUCTION=https://mercadoya-back.onrender.com
-
- //const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
- 
   const dispatch = useDispatch();
   const { items: products, cart, loading, error } = useSelector(
     (state) => state.products
   );
 
   const handleAddToCart = (product) => {
+    console.log("Producto agregado al carrito:", product);
     dispatch(addToCart(product));
   };
 
   const handleSendNotification = async () => {
     try {
-      const response = await fetch(
-        `https://mercadoya-back.onrender.com/send-notification`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: "¡Tu pedido!",
-            message: "Tu pedido está listo :D",
-          }),
-        }
-      );
+      const response = await fetch(`https://mercadoya-back.onrender.com`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: "¡Tu pedido!",
+          message: "Tu pedido está listo :D",
+        }),
+      });
 
       if (response.ok) {
         console.log("Notificación enviada con éxito");
@@ -47,7 +39,7 @@ const ProductGrid = () => {
         alert("Hubo un error al enviar la notificación");
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error al enviar la notificación:", error);
     }
   };
 
@@ -65,11 +57,13 @@ const ProductGrid = () => {
 
   return (
     <div className="container mt-4">
-      {/* Botón para enviar notificaciones */}
       <div className="d-flex justify-content-between mb-3">
         <button className="btn btn-success" onClick={handleSendNotification}>
           Enviar Notificación a Todos
         </button>
+        <Link to="/frutas-y-verduras" className="btn btn-info">
+          Ir a Frutas y Verduras
+        </Link>
         <Link to="/cart" className="btn btn-outline-primary position-relative">
           <FontAwesomeIcon icon={faShoppingCart} size="lg" />
           {cart.length > 0 && (
@@ -78,36 +72,19 @@ const ProductGrid = () => {
             </span>
           )}
         </Link>
-        {/* Nuevo botón para ir al componente LaserScanner */}
         <Link to="/laser-scanner" className="btn btn-secondary">
           Ir a Escáner Láser
         </Link>
       </div>
 
-      {/* Productos */}
       <h2 className="text-center mb-4">Productos del Supermercado</h2>
       <div className="row">
         {products.map((product) => (
-          <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" key={product.id}>
-            <div className="card h-100 shadow-sm">
-              <img
-                src={product.image}
-                className="card-img-top"
-                alt={product.name}
-                style={{ height: "150px", objectFit: "cover" }}
-              />
-              <div className="card-body text-center">
-                <h5 className="card-title">{product.name}</h5>
-                <p className="card-text">${parseFloat(product.price).toFixed(2)}</p>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleAddToCart(product)}
-                >
-                  Agregar al Carrito
-                </button>
-              </div>
-            </div>
-          </div>
+          <Tarjetas
+            key={product.id}
+            product={product}
+            onAddToCart={handleAddToCart} // Pasamos una función para manejar el carrito
+          />
         ))}
       </div>
     </div>

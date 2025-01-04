@@ -1,0 +1,16 @@
+.image-container {
+    width: 100%;
+    height: 200px; /* Altura fija para mantener uniformidad */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa; /* Fondo gris claro */
+  }
+  
+  .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Asegura que la imagen se ajuste sin recorte */
+  }
+  

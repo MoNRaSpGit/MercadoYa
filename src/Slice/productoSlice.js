@@ -1,34 +1,63 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-// Selecciona la URL según el entorno
-//process.env.REACT_APP_API_URL_PRODUCTION
-//process.env.REACT_APP_API_URL_LOCAL
 const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
 
 export const fetchProducts = createAsyncThunk(
-  'products/fetchProducts',
+  "products/fetchProducts",
   async (_, thunkAPI) => {
-
     try {
-      const response = await fetch(`${API_URL}/api/products`); // Usar la variable de entorno
-
+      const response = await fetch(`${API_URL}/api/products`);
 
       if (!response.ok) {
-        throw new Error('Error al obtener los productos');
+        throw new Error("Error al obtener los productos");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error en fetchProducts:", error.message);
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const saveProduct = createAsyncThunk(
+  "products/saveProduct",
+  async (product, thunkAPI) => {
+    try {
+      const isEditing = !!product.id;
+      const endpoint = isEditing
+        ? `${API_URL}/api/products/${product.id}`
+        : `${API_URL}/api/products`;
+
+      const method = isEditing ? "PUT" : "POST";
+
+      const response = await fetch(endpoint, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al guardar el producto");
       }
 
       const data = await response.json();
 
-      return data;
+      return {
+        ...product,
+        id: isEditing ? product.id : data.productId,
+        ...data,
+      };
     } catch (error) {
-      console.error('Error en fetchProducts:', error.message);
+      console.error("Error en saveProduct:", error.message);
       return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
 const productSlice = createSlice({
-  name: 'products',
+  name: "products",
   initialState: {
     items: [],
     cart: [],
@@ -37,9 +66,7 @@ const productSlice = createSlice({
   },
   reducers: {
     addToCart: (state, action) => {
-      const product = action.payload;
-      state.cart.push(product);
-
+      state.cart.push(action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -47,20 +74,29 @@ const productSlice = createSlice({
       .addCase(fetchProducts.pending, (state) => {
         state.loading = true;
         state.error = null;
-        console.log('Cargando productos...');
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload;
-        console.log('Productos cargados exitosamente:', action.payload);
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        console.error('Error al cargar los productos:', action.payload);
+      })
+      .addCase(saveProduct.fulfilled, (state, action) => {
+        const index = state.items.findIndex((item) => item.id === action.payload.id);
+        if (index !== -1) {
+          state.items[index] = action.payload;
+        } else {
+          state.items.push(action.payload);
+        }
+        console.log("Producto actualizado en el store:", action.payload);
+      })
+      .addCase(saveProduct.rejected, (state, action) => {
+        console.error("Error al guardar el producto:", action.payload);
       });
   },
 });
 
-export const { addToCart } = productSlice.actions; // Exporta la acción
+export const { addToCart } = productSlice.actions;
 export default productSlice.reducer;

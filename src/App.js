@@ -12,6 +12,7 @@ import Cart from "./Componentes/Cart";
 import Ordenes from "./Componentes/Ordenes";
 import LaserScanner from "./Componentes/CardPaymentForm";
 
+
 const publicVapidKey = "BHbacXlHjFUevRaZ4Y0G58ELSjPHf3jAITfhNoxJEKzMCY8-SGCZQNtkGdOU91ozHDSd9kW8me0k9RhAiSESmRU";
 
 const AppWrapper = () => {
@@ -100,6 +101,7 @@ const AppWrapper = () => {
       <Route path="/cart" element={<Cart />} />
       <Route path="/ordenes" element={<Ordenes />} />
       <Route path="/laser-scanner" element={<LaserScanner/>} />
+     
       <Route path="*" element={<div>404 - Página no encontrada</div>} />
     </Routes>
   );
