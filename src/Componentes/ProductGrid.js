@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart, saveProduct } from "../Slice/productoSlice";
+import { addToCart, saveProduct, deleteProduct } from "../Slice/productoSlice";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
@@ -15,9 +15,9 @@ const ProductGrid = () => {
   );
 
   const [editingProduct, setEditingProduct] = useState(null);
+  const [searchText, setSearchText] = useState(""); // Estado para la barra de búsqueda
 
   const handleAddToCart = (product) => {
-    console.log("Producto agregado al carrito:", product);
     dispatch(addToCart(product));
   };
 
@@ -31,6 +31,25 @@ const ProductGrid = () => {
       }
     });
   };
+
+  const handleDeleteProduct = (id) => {
+    console.log("ID del producto a eliminar:", id); // Asegúrate de que sea correcto
+    if (window.confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+      dispatch(deleteProduct(id)).then((action) => {
+        if (action.type === "products/deleteProduct/fulfilled") {
+          alert("Producto eliminado con éxito.");
+        } else {
+          alert("Error al eliminar el producto.");
+        }
+      });
+    }
+  };
+  
+
+  // Filtrar productos por nombre según el texto ingresado en el buscador
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   if (loading) {
     return <div className="text-center">Cargando productos...</div>;
@@ -47,6 +66,13 @@ const ProductGrid = () => {
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between mb-3">
+        <input
+          type="text"
+          className="form-control w-50"
+          placeholder="Buscar productos por nombre..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
         <Link to="/laser-scanner" className="btn btn-secondary">
           Ir a Escáner Láser
         </Link>
@@ -62,12 +88,13 @@ const ProductGrid = () => {
 
       <h2 className="text-center mb-4">Productos del Supermercado</h2>
       <div className="row">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <Tarjetas
             key={product.id}
             product={product}
             onAddToCart={handleAddToCart}
-            onEdit={(product) => setEditingProduct(product)} // Pasamos la función para editar
+            onEdit={(product) => setEditingProduct(product)}
+            onDelete={handleDeleteProduct} // Pasamos la función para eliminar
           />
         ))}
       </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import "../Css/Tarjetas.css";
 
-const Tarjetas = ({ product, onEdit, onAddToCart }) => {
+const Tarjetas = ({ product, onEdit, onAddToCart, onDelete }) => {
   return (
     <div className="col-md-3 mb-4">
       <div className="card h-100 shadow-sm">
@@ -21,6 +21,12 @@ const Tarjetas = ({ product, onEdit, onAddToCart }) => {
             onClick={() => onEdit(product)}
           >
             Editar
+          </button>
+          <button
+            className="btn btn-danger mt-2"
+            onClick={() => onDelete(product.id)}
+          >
+            Eliminar
           </button>
           <button
             className="btn btn-success mt-2"

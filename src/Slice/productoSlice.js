@@ -21,6 +21,9 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+
+
+
 export const saveProduct = createAsyncThunk(
   "products/saveProduct",
   async (product, thunkAPI) => {
@@ -56,6 +59,27 @@ export const saveProduct = createAsyncThunk(
   }
 );
 
+export const deleteProduct = createAsyncThunk(
+  "products/deleteProduct",
+  async (id, thunkAPI) => {
+    try {
+      const response = await fetch(`${API_URL}/api/products/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al eliminar el producto");
+      }
+
+      return id;
+    } catch (error) {
+      console.error("Error en deleteProduct:", error.message);
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+
 const productSlice = createSlice({
   name: "products",
   initialState: {
@@ -90,13 +114,16 @@ const productSlice = createSlice({
         } else {
           state.items.push(action.payload);
         }
-        console.log("Producto actualizado en el store:", action.payload);
       })
-      .addCase(saveProduct.rejected, (state, action) => {
-        console.error("Error al guardar el producto:", action.payload);
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.items = state.items.filter((item) => item.id !== action.payload);
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        console.error("Error al eliminar el producto:", action.payload);
       });
   },
 });
+
 
 export const { addToCart } = productSlice.actions;
 export default productSlice.reducer;
