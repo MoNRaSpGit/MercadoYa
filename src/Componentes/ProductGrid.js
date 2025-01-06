@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart } from "../Slice/productoSlice";
+import { addToCart, saveProduct } from "../Slice/productoSlice";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import "../Css/ProductGrid.css";
-import Tarjetas from "../Componentes/Tarjetas"; // Importar el componente Tarjetas
+import Tarjetas from "../Componentes/Tarjetas";
+import TarjetasEdit from "../Componentes/TarjetasEdit";
 
 const ProductGrid = () => {
   const dispatch = useDispatch();
@@ -13,34 +14,22 @@ const ProductGrid = () => {
     (state) => state.products
   );
 
+  const [editingProduct, setEditingProduct] = useState(null);
+
   const handleAddToCart = (product) => {
     console.log("Producto agregado al carrito:", product);
     dispatch(addToCart(product));
   };
 
-  const handleSendNotification = async () => {
-    try {
-      const response = await fetch(`https://mercadoya-back.onrender.com`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: "¡Tu pedido!",
-          message: "Tu pedido está listo :D",
-        }),
-      });
-
-      if (response.ok) {
-        console.log("Notificación enviada con éxito");
-        alert("Notificación enviada a todos los usuarios");
+  const handleSaveProduct = (product) => {
+    dispatch(saveProduct(product)).then((action) => {
+      if (action.type === "products/saveProduct/fulfilled") {
+        alert(`Producto "${product.name}" actualizado con éxito.`);
+        setEditingProduct(null);
       } else {
-        console.error("Error al enviar la notificación");
-        alert("Hubo un error al enviar la notificación");
+        alert("Error al actualizar el producto.");
       }
-    } catch (error) {
-      console.error("Error al enviar la notificación:", error);
-    }
+    });
   };
 
   if (loading) {
@@ -58,12 +47,6 @@ const ProductGrid = () => {
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between mb-3">
-        <button className="btn btn-success" onClick={handleSendNotification}>
-          Enviar Notificación a Todos
-        </button>
-        <Link to="/frutas-y-verduras" className="btn btn-info">
-          Ir a Frutas y Verduras
-        </Link>
         <Link to="/cart" className="btn btn-outline-primary position-relative">
           <FontAwesomeIcon icon={faShoppingCart} size="lg" />
           {cart.length > 0 && (
@@ -71,9 +54,6 @@ const ProductGrid = () => {
               {cart.length}
             </span>
           )}
-        </Link>
-        <Link to="/laser-scanner" className="btn btn-secondary">
-          Ir a Escáner Láser
         </Link>
       </div>
 
@@ -83,10 +63,22 @@ const ProductGrid = () => {
           <Tarjetas
             key={product.id}
             product={product}
-            onAddToCart={handleAddToCart} // Pasamos una función para manejar el carrito
+            onAddToCart={handleAddToCart}
+            onEdit={(product) => setEditingProduct(product)} // Pasamos la función para editar
           />
         ))}
       </div>
+
+      {editingProduct && (
+        <TarjetasEdit
+          product={editingProduct}
+          onChange={(key, value) =>
+            setEditingProduct((prev) => ({ ...prev, [key]: value }))
+          }
+          onCancel={() => setEditingProduct(null)}
+          onSave={() => handleSaveProduct(editingProduct)}
+        />
+      )}
     </div>
   );
 };

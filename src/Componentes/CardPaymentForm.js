@@ -23,15 +23,12 @@ const LaserScanner = () => {
   }, [dispatch]);
 
   const handleScannedBarcode = (barcode) => {
-    console.log("Código de barras escaneado:", barcode);
-
     const existingProduct = globalProducts.find(
       (product) => product.barcode === barcode
     );
 
     if (existingProduct) {
-      console.log("Producto encontrado:", existingProduct);
-
+      // Si el producto existe, se añade a los productos escaneados
       const alreadyScanned = scannedProducts.find(
         (product) => product.barcode === barcode
       );
@@ -39,11 +36,9 @@ const LaserScanner = () => {
       if (!alreadyScanned) {
         const newProduct = { ...existingProduct, quantity: 1 };
         setScannedProducts((prev) => [...prev, newProduct]);
-      } else {
-        console.log("Producto ya escaneado:", existingProduct.name);
       }
     } else {
-      console.log("Producto no encontrado. Preparando para agregar nuevo producto.");
+      // Si no existe, crear un producto vacío
       const emptyProduct = {
         id: null,
         barcode,
@@ -57,42 +52,51 @@ const LaserScanner = () => {
     }
   };
 
-  const handleSaveProduct = (product) => {
-    dispatch(saveProduct(product)).then((action) => {
-      if (action.type === "products/saveProduct/fulfilled") {
-        alert(
-          product.id
-            ? `Producto "${product.name}" actualizado con éxito.`
-            : `Producto "${product.name}" creado con éxito.`
-        );
-        setEditingProduct(null);
-        // Refrescar los productos globales inmediatamente después de guardar
-        dispatch(fetchProducts()).then(() => {
-          console.log("Productos actualizados después de guardar:", globalProducts);
-        });
-      } else {
-        alert("Hubo un error al guardar el producto.");
-      }
-    });
+
+  const handleSaveProduct = () => {
+    const productToSave = {
+      ...editingProduct,
+      price: editingProduct.price || 0, // Asegura un precio por defecto (0 si no se proporciona)
+      image: editingProduct.image || null, // Asegura que sea null si no hay imagen
+      description: editingProduct.description || "", // Asegura una cadena vacía si no hay descripción
+    };
+  
+    dispatch(saveProduct(productToSave))
+      .then((action) => {
+        if (action.type === "products/saveProduct/fulfilled") {
+          alert(`Producto "${editingProduct.name}" guardado con éxito.`);
+          setEditingProduct(null); // Limpiar el estado de edición
+          dispatch(fetchProducts()).then(() => {
+            window.location.reload(); // Recargar el componente completo
+          });
+        } else {
+          alert("Error al guardar el producto.");
+        }
+      });
   };
+  
+
 
   const handleAddManualProduct = () => {
-    if (!manualProduct.name || !manualProduct.price) {
-      alert("Por favor, completa el nombre y el precio del producto.");
+    if (!manualProduct.name) {
+      alert("Por favor, completa el nombre del producto.");
       return;
     }
 
     const newProduct = {
-      barcode: `manual-${Date.now()}`,
+      barcode: `manual-${Date.now()}`, // Generar un código único
       name: manualProduct.name,
-      price: parseFloat(manualProduct.price),
+      price: parseFloat(manualProduct.price) || 0, // Precio predeterminado
+      description: manualProduct.description || "", // Descripción predeterminada vacía
+      image: manualProduct.image || null, // Imagen predeterminada (null)
       quantity: 1,
     };
 
     setScannedProducts((prev) => [...prev, newProduct]);
-    setManualProduct({ name: "", price: "" });
+    setManualProduct({ name: "", price: "", description: "", image: null });
     setShowManualProductModal(false);
   };
+
 
   const handleKeyDown = (e) => {
     const char = e.key;
@@ -190,6 +194,20 @@ const LaserScanner = () => {
                         name: e.target.value,
                       }))
                     }
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Descripción</label>
+                  <textarea
+                    className="form-control"
+                    value={manualProduct.description}
+                    onChange={(e) =>
+                      setManualProduct((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="mb-3">
@@ -202,6 +220,19 @@ const LaserScanner = () => {
                       setManualProduct((prev) => ({
                         ...prev,
                         price: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Imagen</label>
+                  <input
+                    type="file"
+                    className="form-control"
+                    onChange={(e) =>
+                      setManualProduct((prev) => ({
+                        ...prev,
+                        image: e.target.files[0] || null,
                       }))
                     }
                   />

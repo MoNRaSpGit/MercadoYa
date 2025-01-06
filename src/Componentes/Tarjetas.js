@@ -1,5 +1,5 @@
 import React from "react";
-import "../Css/Tarjetas.css"; // Archivo CSS para estilos personalizados
+import "../Css/Tarjetas.css";
 
 const Tarjetas = ({ product, onEdit, onAddToCart }) => {
   return (
@@ -9,33 +9,25 @@ const Tarjetas = ({ product, onEdit, onAddToCart }) => {
           <img
             src={product.image || "https://via.placeholder.com/150"}
             className="card-img-top"
-            alt={product.name || "Producto nuevo"}
+            alt={product.name || "Producto"}
           />
         </div>
         <div className="card-body d-flex flex-column">
-          <h5 className="card-title">{product.name || "Nuevo Producto"}</h5>
-          <p className="card-text">
-            {product.description || "Descripción pendiente."}
-          </p>
-          <p className="card-text fw-bold">
-            ${product.price ? parseFloat(product.price).toFixed(2) : "0.00"}
-          </p>
-          {onEdit && (
-            <button
-              className="btn btn-primary mt-auto"
-              onClick={() => onEdit(product)}
-            >
-              Editar
-            </button>
-          )}
-          {onAddToCart && (
-            <button
-              className="btn btn-success mt-auto"
-              onClick={() => onAddToCart(product)}
-            >
-              Agregar al Carrito
-            </button>
-          )}
+          <h5 className="card-title">{product.name || "Sin nombre"}</h5>
+          <p className="card-text">{product.description || "Descripción pendiente."}</p>
+          <p className="card-text fw-bold">${product.price || "0.00"}</p>
+          <button
+            className="btn btn-primary mt-auto"
+            onClick={() => onEdit(product)}
+          >
+            Editar
+          </button>
+          <button
+            className="btn btn-success mt-2"
+            onClick={() => onAddToCart(product)}
+          >
+            Agregar al Carrito
+          </button>
         </div>
       </div>
     </div>
