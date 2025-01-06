@@ -56,23 +56,22 @@ const LaserScanner = () => {
   const handleSaveProduct = () => {
     const productToSave = {
       ...editingProduct,
-      price: editingProduct.price || 0, // Asegura un precio por defecto
+      price: editingProduct.price || 0, // Asegura un precio por defecto (0 si no se proporciona)
       image: editingProduct.image || null, // Asegura que sea null si no hay imagen
       description: editingProduct.description || "", // Asegura una cadena vacía si no hay descripción
     };
-
+  
     dispatch(saveProduct(productToSave))
       .then((action) => {
         if (action.type === "products/saveProduct/fulfilled") {
           alert(`Producto "${editingProduct.name}" guardado con éxito.`);
           setEditingProduct(null); // Limpiar el estado de edición
-          dispatch(fetchProducts()); // Refrescar los productos sin recargar la página
         } else {
           alert("Error al guardar el producto.");
         }
       });
   };
-
+  
 
 
   const handleAddManualProduct = () => {
