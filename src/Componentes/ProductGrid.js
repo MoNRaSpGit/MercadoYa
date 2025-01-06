@@ -47,6 +47,9 @@ const ProductGrid = () => {
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between mb-3">
+        <Link to="/laser-scanner" className="btn btn-secondary">
+          Ir a Escáner Láser
+        </Link>
         <Link to="/cart" className="btn btn-outline-primary position-relative">
           <FontAwesomeIcon icon={faShoppingCart} size="lg" />
           {cart.length > 0 && (
