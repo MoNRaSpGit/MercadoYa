@@ -11,7 +11,7 @@ import ProductGrid from "./Componentes/ProductGrid";
 import Cart from "./Componentes/Cart";
 import Ordenes from "./Componentes/Ordenes";
 import LaserScanner from "./Componentes/CardPaymentForm";
-
+import WebSocketProvider from "./Componentes/WebSocketProvider"; // Importar el WebSocketProvider
 
 const publicVapidKey = "BHbacXlHjFUevRaZ4Y0G58ELSjPHf3jAITfhNoxJEKzMCY8-SGCZQNtkGdOU91ozHDSd9kW8me0k9RhAiSESmRU";
 
@@ -36,7 +36,7 @@ const AppWrapper = () => {
       if ("serviceWorker" in navigator) {
         try {
           console.log("Intentando registrar el Service Worker...");
-          const registration = await navigator.serviceWorker.register("/MercadoYa/sw.js"); // Ruta relativa al subdirectorio
+          const registration = await navigator.serviceWorker.register("/MercadoYa/sw.js");
 
           console.log("Service Worker registrado con éxito:", registration);
 
@@ -100,8 +100,7 @@ const AppWrapper = () => {
       <Route path="/products" element={<ProductGrid />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/ordenes" element={<Ordenes />} />
-      <Route path="/laser-scanner" element={<LaserScanner/>} />
-     
+      <Route path="/laser-scanner" element={<LaserScanner />} />
       <Route path="*" element={<div>404 - Página no encontrada</div>} />
     </Routes>
   );
@@ -110,9 +109,11 @@ const AppWrapper = () => {
 const App = () => {
   return (
     <Provider store={store}>
-      <Router basename="/MercadoYa">
-        <AppWrapper />
-      </Router>
+      <WebSocketProvider>
+        <Router basename="/MercadoYa">
+          <AppWrapper />
+        </Router>
+      </WebSocketProvider>
     </Provider>
   );
 };
