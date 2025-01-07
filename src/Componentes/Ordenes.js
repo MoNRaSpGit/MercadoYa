@@ -25,6 +25,10 @@ const Ordenes = () => {
     }
   };
 
+  useEffect(() => {
+    console.log("Pedidos actualizados en el componente Ordenes:", pedidos);
+  }, [pedidos]);
+
   return (
     <div className="container mt-4">
       <h2 className="text-center mb-4">Lista de Órdenes</h2>
