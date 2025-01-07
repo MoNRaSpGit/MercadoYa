@@ -9,7 +9,7 @@ import Register from "./Componentes/Register";
 import Homee from "./Componentes/Homee";
 import ProductGrid from "./Componentes/ProductGrid";
 import Cart from "./Componentes/Cart";
-import Ordenes from "./Componentes/Ordenes";
+import ListaOrdenes from "./Componentes/ListaOrdenes"; // Reemplazamos por el nuevo componente
 import LaserScanner from "./Componentes/CardPaymentForm";
 import WebSocketProvider from "./Componentes/WebSocketProvider"; // Importar el WebSocketProvider
 
@@ -77,7 +77,6 @@ const AppWrapper = () => {
         audio.play().catch((err) => console.error("Error al reproducir el sonido:", err));
       }
     });
-
   }, [dispatch]);
 
   const urlBase64ToUint8Array = (base64String) => {
@@ -99,7 +98,7 @@ const AppWrapper = () => {
       <Route path="/home" element={<Homee />} />
       <Route path="/products" element={<ProductGrid />} />
       <Route path="/cart" element={<Cart />} />
-      <Route path="/ordenes" element={<Ordenes />} />
+      <Route path="/ordenes" element={<ListaOrdenes />} /> {/* Cambiado a ListaOrdenes */}
       <Route path="/laser-scanner" element={<LaserScanner />} />
       <Route path="*" element={<div>404 - Página no encontrada</div>} />
     </Routes>

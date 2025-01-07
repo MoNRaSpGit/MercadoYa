@@ -1,38 +1,36 @@
-
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { actualizarEstadoPedidoAsync } from '../Slice/pedidoSlice';
 
-const Ordenes = () => {
+const ListaOrdenes = () => {
   const dispatch = useDispatch();
-  const pedidos = useSelector((state) => [...state.pedidos.lista]);
 
-  useEffect(() => {
-    console.log("Pedidos actualizados en el componente Ordenes:", pedidos);
-  }, [pedidos]);
-
+  // Obtener el estado global de pedidos desde Redux
+  const pedidos = useSelector((state) => [...state.pedidos.lista]); // Crear una nueva referencia para asegurar la actualización
   const loading = useSelector((state) => state.pedidos.loading);
   const error = useSelector((state) => state.pedidos.error);
 
   // Función para manejar el cambio de estado
   const handleCambiarEstado = async (pedido) => {
-    console.log("toy en ordenes , tengo que ver ordens" , pedidos);
-    
     const nuevosEstados = ['Pendiente', 'Procesando', 'Listo'];
     const idxActual = nuevosEstados.indexOf(pedido.status);
     const nuevoEstado = nuevosEstados[(idxActual + 1) % nuevosEstados.length];
 
     try {
-      console.log(`Ordenes: Cambiando estado del pedido ${pedido.id} a ${nuevoEstado}`);
+      console.log(`Cambiando estado del pedido ${pedido.id} a ${nuevoEstado}`);
       await dispatch(actualizarEstadoPedidoAsync({ id: pedido.id, nuevoEstado })).unwrap();
-      console.log('Ordenes: Estado actualizado con éxito');
+      console.log(`Estado del pedido ${pedido.id} actualizado a ${nuevoEstado}`);
     } catch (error) {
-      console.error('Ordenes: Error al actualizar estado', error);
+      console.error('Error al actualizar el estado del pedido:', error);
     }
   };
 
+  // Log para verificar los pedidos cada vez que se actualicen
+  useEffect(() => {
+    console.log('Pedidos detectados en ListaOrdenes:', pedidos);
+  }, [pedidos]);
 
-
+  // Renderización del componente
   return (
     <div className="container mt-4">
       <h2 className="text-center mb-4">Lista de Órdenes</h2>
@@ -40,9 +38,7 @@ const Ordenes = () => {
       {loading ? (
         <p className="text-center">Cargando órdenes...</p>
       ) : error ? (
-        <p className="text-center text-danger">
-          Error al cargar órdenes: {error}
-        </p>
+        <p className="text-center text-danger">Error al cargar órdenes: {error}</p>
       ) : pedidos.length === 0 ? (
         <p className="text-center">No hay órdenes confirmadas aún.</p>
       ) : (
@@ -52,7 +48,7 @@ const Ordenes = () => {
               <h5>Orden ID: {pedido.id}</h5>
               <p>Fecha: {new Date(pedido.created_at).toLocaleString()}</p>
               <p>
-                Estado:{' '}  
+                Estado:{' '}
                 <span
                   style={{
                     padding: '5px 10px',
@@ -80,4 +76,4 @@ const Ordenes = () => {
   );
 };
 
-export default Ordenes;
+export default ListaOrdenes;
