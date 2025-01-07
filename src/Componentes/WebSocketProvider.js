@@ -33,7 +33,9 @@ const WebSocketProvider = ({ children }) => {
     socket.on("order_status_updated", (data) => {
       console.log("WebSocket: Estado de pedido actualizado:", data);
       dispatch(actualizarEstadoPedido(data)); // Acción para actualizar el estado en el store global
+      window.dispatchEvent(new Event("real-time-update")); // Dispara el evento personalizado
     });
+    
 
     // Evento: Desconexión
     socket.on("disconnect", () => {
