@@ -5,10 +5,8 @@ import { actualizarEstadoPedidoAsync } from '../Slice/pedidoSlice';
 
 const Ordenes = () => {
   const dispatch = useDispatch();
-  const pedidos = useSelector((state) => {
-    console.log("Selector detectó pedidos:", state.pedidos.lista);
-    return state.pedidos.lista;
-  });
+  const pedidos = useSelector((state) => [...state.pedidos.lista]);
+
   
 
   const loading = useSelector((state) => state.pedidos.loading);
