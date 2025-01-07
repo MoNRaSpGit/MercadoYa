@@ -10,6 +10,8 @@ const Ordenes = () => {
 
   // Función para manejar el cambio de estado
   const handleCambiarEstado = async (pedido) => {
+    console.log("toy en ordenes , tengo que ver ordens" , pedidos);
+    
     const nuevosEstados = ['Pendiente', 'Procesando', 'Listo'];
     const idxActual = nuevosEstados.indexOf(pedido.status);
     const nuevoEstado = nuevosEstados[(idxActual + 1) % nuevosEstados.length];
