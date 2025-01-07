@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/MercadoYa/static/css/main.32a2f719.css",
-    "main.js": "/MercadoYa/static/js/main.d5d17846.js",
+    "main.js": "/MercadoYa/static/js/main.405c95e5.js",
     "index.html": "/MercadoYa/index.html",
     "main.32a2f719.css.map": "/MercadoYa/static/css/main.32a2f719.css.map",
-    "main.d5d17846.js.map": "/MercadoYa/static/js/main.d5d17846.js.map"
+    "main.405c95e5.js.map": "/MercadoYa/static/js/main.405c95e5.js.map"
   },
   "entrypoints": [
     "static/css/main.32a2f719.css",
-    "static/js/main.d5d17846.js"
+    "static/js/main.405c95e5.js"
   ]
 }
