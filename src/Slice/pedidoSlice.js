@@ -101,25 +101,24 @@ const pedidoSlice = createSlice({
         created_at: action.payload.created_at || new Date().toISOString(),
         status: action.payload.status || 'Pendiente',
       };
-    
+
       // Verifica si el pedido ya existe
       const existe = state.lista.some((pedido) => pedido.id === nuevoPedido.id);
       if (!existe) {
-        state.lista.push(nuevoPedido); // Solo agrega si no existe
+        state.lista = [...state.lista, nuevoPedido]; // Agrega de forma inmutable
       } else {
         console.log('pedidoSlice: Pedido ya existe, no se agrega:', nuevoPedido);
       }
     },
-    
+
 
     // Reducer para actualizar el estado de un pedido recibido por WebSocket
     actualizarEstadoPedido: (state, action) => {
       console.log('pedidoSlice: Actualizando estado del pedido:', action.payload);
       const { id, status } = action.payload;
-      const pedido = state.lista.find((p) => p.id === id);
-      if (pedido) {
-        pedido.status = status; // Actualizar el estado en el store global
-      }
+      state.lista = state.lista.map((pedido) =>
+        pedido.id === id ? { ...pedido, status } : pedido
+      );
     },
   },
   extraReducers: (builder) => {
@@ -132,7 +131,7 @@ const pedidoSlice = createSlice({
       .addCase(confirmarPedidoAsync.rejected, (state, action) => {
         console.error('Error al confirmar pedido:', action.payload);
         state.error = action.payload;
-      })   
+      })
 
       // OBTENER PEDIDOS
       .addCase(fetchPedidosAsync.fulfilled, (state, action) => {
@@ -144,37 +143,36 @@ const pedidoSlice = createSlice({
         );
 
         state.lista = [...state.lista, ...nuevosPedidos]; // Solo agrega pedidos únicos
-      }) 
-      
+      })
+
       .addCase(fetchPedidosAsync.rejected, (state, action) => {
         console.error('Error al obtener pedidos:', action.payload);
         state.error = action.payload;
       })
 
-    // ACTUALIZAR ESTADO
-    .addCase(actualizarEstadoPedidoAsync.fulfilled, (state, action) => {
-      console.log('Estado de pedido actualizado:', action.payload);
-      const { id, nuevoEstado } = action.payload;
-      const pedido = state.lista.find((p) => p.id === id);
-      if (pedido) {
-        pedido.status = nuevoEstado; // Actualiza el estado del pedido
-      }
-    })
-    .addCase(actualizarEstadoPedidoAsync.rejected, (state, action) => {
-      console.error('Error al actualizar estado del pedido:', action.payload);
-      state.error = action.payload;
-    })
+      // ACTUALIZAR ESTADO
+      .addCase(actualizarEstadoPedidoAsync.fulfilled, (state, action) => {
+        console.log('Estado de pedido actualizado:', action.payload);
+        const { id, nuevoEstado } = action.payload;
+        state.lista = state.lista.map((pedido) =>
+          pedido.id === id ? { ...pedido, status: nuevoEstado } : pedido
+        );
+      })
+      .addCase(actualizarEstadoPedidoAsync.rejected, (state, action) => {
+        console.error('Error al actualizar estado del pedido:', action.payload);
+        state.error = action.payload;
+      })
 
-    // ELIMINAR PEDIDO
-    .addCase(eliminarPedidoAsync.fulfilled, (state, action) => {
-      console.log('Pedido eliminado:', action.payload);
-      state.lista = state.lista.filter((pedido) => pedido.id !== action.payload); // Elimina el pedido de la lista
-    })
-    .addCase(eliminarPedidoAsync.rejected, (state, action) => {
-      console.error('Error al eliminar pedido:', action.payload);
-      state.error = action.payload;
-    });
-},
+      // ELIMINAR PEDIDO
+      .addCase(eliminarPedidoAsync.fulfilled, (state, action) => {
+        console.log('Pedido eliminado:', action.payload);
+        state.lista = state.lista.filter((pedido) => pedido.id !== action.payload); // Elimina el pedido de la lista
+      })
+      .addCase(eliminarPedidoAsync.rejected, (state, action) => {
+        console.error('Error al eliminar pedido:', action.payload);
+        state.error = action.payload;
+      });
+  },
 });
 
 export const { añadirPedido, actualizarEstadoPedido } = pedidoSlice.actions;
