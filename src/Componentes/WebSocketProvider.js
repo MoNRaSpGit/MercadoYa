@@ -1,15 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { io } from "socket.io-client";
-import { añadirPedido, actualizarEstadoPedido } from "../Slice/pedidoSlice";
+import { añadirPedido, actualizarEstadoPedido, fetchPedidosAsync } from "../Slice/pedidoSlice"; // IMPORTA fetchPedidosAsync
 
-
-
- //REACT_APP_API_URL_LOCAL=http://localhost:3001
- //REACT_APP_API_URL_PRODUCTION=https://mercadoya-back.onrender.com
-
-
-const SOCKET_URL = "https://mercadoya-back.onrender.com" // Cambia la URL según tu entorno
+const SOCKET_URL = "https://mercadoya-back.onrender.com"; // Cambia la URL según tu entorno
 
 const WebSocketProvider = ({ children }) => {
   const dispatch = useDispatch();
@@ -26,16 +20,15 @@ const WebSocketProvider = ({ children }) => {
     // Evento: Nueva orden creada
     socket.on("new_order", (order) => {
       console.log("WebSocket: Nueva orden recibida:", order);
-    
-      // Si faltan datos, forza una sincronización completa
+
+      // Verificar si la orden tiene productos
       if (!order.productos || order.productos.length === 0) {
         console.warn("Orden incompleta. Forzando recarga de pedidos.");
-        dispatch(fetchPedidosAsync()); // Acción para volver a cargar pedidos
+        dispatch(fetchPedidosAsync()); // Acción para recargar pedidos
       } else {
         dispatch(añadirPedido(order));
       }
     });
-    
 
     // Evento: Actualización de estado de una orden
     socket.on("order_status_updated", (data) => {
@@ -43,7 +36,6 @@ const WebSocketProvider = ({ children }) => {
       dispatch(actualizarEstadoPedido(data)); // Acción para actualizar el estado en el store global
       window.dispatchEvent(new Event("real-time-update")); // Dispara el evento personalizado
     });
-    
 
     // Evento: Desconexión
     socket.on("disconnect", () => {
