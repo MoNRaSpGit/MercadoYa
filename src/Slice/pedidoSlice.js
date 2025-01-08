@@ -95,21 +95,23 @@ const pedidoSlice = createSlice({
   reducers: {
     // Reducer para añadir un pedido recibido por WebSocket
     añadirPedido: (state, action) => {
-      console.log('pedidoSlice: Añadiendo nueva orden:', action.payload);
+      console.log("pedidoSlice: Añadiendo nueva orden:", action.payload);
       const nuevoPedido = {
         ...action.payload,
+        productos: action.payload.productos || [], // Asegurar que productos sea siempre un array
         created_at: action.payload.created_at || new Date().toISOString(),
-        status: action.payload.status || 'Pendiente',
+        status: action.payload.status || "Pendiente",
       };
-
+    
       // Verifica si el pedido ya existe
       const existe = state.lista.some((pedido) => pedido.id === nuevoPedido.id);
       if (!existe) {
         state.lista = [...state.lista, nuevoPedido]; // Agrega de forma inmutable
       } else {
-        console.log('pedidoSlice: Pedido ya existe, no se agrega:', nuevoPedido);
+        console.log("pedidoSlice: Pedido ya existe, no se agrega:", nuevoPedido);
       }
     },
+    
 
 
     // Reducer para actualizar el estado de un pedido recibido por WebSocket

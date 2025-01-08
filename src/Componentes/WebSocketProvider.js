@@ -26,8 +26,16 @@ const WebSocketProvider = ({ children }) => {
     // Evento: Nueva orden creada
     socket.on("new_order", (order) => {
       console.log("WebSocket: Nueva orden recibida:", order);
-      dispatch(añadirPedido(order)); // Acción para agregar la orden al store global
+    
+      // Si faltan datos, forza una sincronización completa
+      if (!order.productos || order.productos.length === 0) {
+        console.warn("Orden incompleta. Forzando recarga de pedidos.");
+        dispatch(fetchPedidosAsync()); // Acción para volver a cargar pedidos
+      } else {
+        dispatch(añadirPedido(order));
+      }
     });
+    
 
     // Evento: Actualización de estado de una orden
     socket.on("order_status_updated", (data) => {
