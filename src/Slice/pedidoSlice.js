@@ -113,13 +113,23 @@ const pedidoSlice = createSlice({
 
 
     // Reducer para actualizar el estado de un pedido recibido por WebSocket
+    // En el reducer actualizarEstadoPedido
     actualizarEstadoPedido: (state, action) => {
-      console.log('pedidoSlice: Actualizando estado del pedido:', action.payload);
       const { id, status } = action.payload;
-      state.lista = state.lista.map((pedido) =>
-        pedido.id === id ? { ...pedido, status } : pedido
-      );
+      console.log("ID entrante:", id, "Tipo:", typeof id);
+
+      state.lista = state.lista.map((pedido) => {
+        console.log("Comparando pedido:", pedido.id, "Tipo:", typeof pedido.id);
+        if (String(pedido.id) === String(id)) {
+          console.log("¡Encontrado! Actualizando status a", status);
+          return { ...pedido, status };
+        } else {
+          return pedido;
+        }
+      });
     },
+
+
   },
   extraReducers: (builder) => {
     builder
