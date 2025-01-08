@@ -9,16 +9,10 @@ const ListaOrdenes = () => {
   const error = useSelector((state) => state.pedidos.error);
 
   // Función para calcular el total de productos en una orden
-  const calcularTotal = (productos) => {
+  const calcularTotal = (productos = []) => {
     return productos.reduce((total, producto) => {
       return total + producto.price * producto.quantity;
     }, 0);
-  };
-
-  // Función para formatear la fecha y hora
-  const formatearFechaHora = (fechaISO) => {
-    const opciones = { dateStyle: "long", timeStyle: "short", timeZone: "America/Montevideo" };
-    return new Intl.DateTimeFormat("es-UY", opciones).format(new Date(fechaISO));
   };
 
   // Función para manejar el cambio de estado
@@ -55,10 +49,9 @@ const ListaOrdenes = () => {
           {pedidos.map((pedido) => (
             <li key={pedido.id} className="list-group-item">
               <h5>Pedido número {pedido.id}</h5>
-              <p><strong>Fecha y hora:</strong> {formatearFechaHora(pedido.created_at)}</p>
               <p>Productos:</p>
               <ul>
-                {pedido.productos.map((producto, index) => (
+                {(pedido.productos || []).map((producto, index) => (
                   <li key={index}>
                     {producto.name} - Cantidad: {producto.quantity} - Precio: ${producto.price}
                   </li>
