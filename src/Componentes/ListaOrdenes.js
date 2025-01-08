@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actualizarEstadoPedidoAsync } from "../Slice/pedidoSlice";
 
@@ -7,7 +7,19 @@ const ListaOrdenes = () => {
   const pedidos = useSelector((state) => state.pedidos.lista);
   const loading = useSelector((state) => state.pedidos.loading);
   const error = useSelector((state) => state.pedidos.error);
-  const [refresh, setRefresh] = useState(false); // Estado para forzar renderización
+
+  // Función para calcular el total de productos en una orden
+  const calcularTotal = (productos) => {
+    return productos.reduce((total, producto) => {
+      return total + producto.price * producto.quantity;
+    }, 0);
+  };
+
+  // Función para formatear la fecha y hora
+  const formatearFechaHora = (fechaISO) => {
+    const opciones = { dateStyle: "long", timeStyle: "short", timeZone: "America/Montevideo" };
+    return new Intl.DateTimeFormat("es-UY", opciones).format(new Date(fechaISO));
+  };
 
   // Función para manejar el cambio de estado
   const handleCambiarEstado = async (pedido) => {
@@ -23,20 +35,6 @@ const ListaOrdenes = () => {
       console.error("ListaOrdenes: Error al actualizar estado", error);
     }
   };
-
-  useEffect(() => {
-    // Escuchar actualizaciones en tiempo real
-    const handleRealTimeUpdate = () => {
-      console.log("ListaOrdenes: Cambio detectado, forzando actualización");
-      setRefresh((prev) => !prev); // Cambia el estado para forzar renderizado
-    };
-
-    window.addEventListener("real-time-update", handleRealTimeUpdate); // Evento personalizado
-
-    return () => {
-      window.removeEventListener("real-time-update", handleRealTimeUpdate);
-    };
-  }, []);
 
   useEffect(() => {
     console.log("ListaOrdenes: Pedidos actualizados:", pedidos);
@@ -56,10 +54,19 @@ const ListaOrdenes = () => {
         <ul className="list-group">
           {pedidos.map((pedido) => (
             <li key={pedido.id} className="list-group-item">
-              <h5>Orden ID: {pedido.id}</h5>
-              <p>Fecha: {new Date(pedido.created_at).toLocaleString()}</p>
+              <h5>Pedido número {pedido.id}</h5>
+              <p><strong>Fecha y hora:</strong> {formatearFechaHora(pedido.created_at)}</p>
+              <p>Productos:</p>
+              <ul>
+                {pedido.productos.map((producto, index) => (
+                  <li key={index}>
+                    {producto.name} - Cantidad: {producto.quantity} - Precio: ${producto.price}
+                  </li>
+                ))}
+              </ul>
+              <p><strong>Total a pagar:</strong> ${calcularTotal(pedido.productos).toFixed(2)}</p>
               <p>
-                Estado:{" "}
+                <strong>Estado:</strong>{" "}
                 <span
                   style={{
                     padding: "5px 10px",
