@@ -97,15 +97,24 @@ const LaserScanner = () => {
 
   const handleKeyDown = (e) => {
     const char = e.key;
-
+  
     if (char === "Enter") {
-      const barcode = scannerInput.trim();
+      const barcode = scannerInput.trim(); // Usamos el valor ya acumulado y limpiamos espacios
+      console.log("Código de barras capturado con el láser:", barcode); // Aquí se imprime el código de barras
       handleScannedBarcode(barcode);
       setScannerInput(""); // Limpiar el input
+    } else if (/^\d$/.test(char)) {
+      // Solo permitimos números
+      setScannerInput((prev) => {
+        const updatedInput = prev + char;
+        console.log("scannerInput actualizado:", updatedInput); // Verificar scannerInput en tiempo real
+        return updatedInput;
+      });
     } else {
-      setScannerInput((prev) => prev + char);
+      console.log(`Tecla no válida ignorada: ${char}`); // Log para ver teclas inválidas
     }
   };
+  
 
   const updateQuantity = (barcode, newQuantity) => {
     setScannedProducts((prev) =>

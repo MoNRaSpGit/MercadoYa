@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
 
+
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async (_, thunkAPI) => {
