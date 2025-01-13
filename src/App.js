@@ -16,7 +16,9 @@ import WebSocketProvider from "./Componentes/WebSocketProvider"; // Importar el 
 const publicVapidKey = "BHbacXlHjFUevRaZ4Y0G58ELSjPHf3jAITfhNoxJEKzMCY8-SGCZQNtkGdOU91ozHDSd9kW8me0k9RhAiSESmRU";
 
 const AppWrapper = () => {
-  const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
+  const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;;
+  //REACT_APP_API_URL_PRODUCTION;
+  //REACT_APP_API_URL_LOCA
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -37,28 +39,29 @@ const AppWrapper = () => {
         try {
           console.log("Intentando registrar el Service Worker...");
           const registration = await navigator.serviceWorker.register("/MercadoYa/sw.js");
-
+    
           console.log("Service Worker registrado con éxito:", registration);
-
+    
           const permission = await Notification.requestPermission();
           if (permission !== "granted") {
             console.warn("Permiso de notificaciones denegado.");
             return;
           }
-
+    
           const subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
           });
-
+    
           await fetch(`${API_URL}/subscribe`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
+            credentials: "include", // Incluye cookies y credenciales
             body: JSON.stringify(subscription),
           });
-
+    
           console.log("Suscripción registrada con éxito:", subscription);
         } catch (error) {
           console.error("Error al registrar el Service Worker o suscripción:", error);
@@ -67,6 +70,7 @@ const AppWrapper = () => {
         console.warn("El navegador no soporta Service Workers.");
       }
     };
+    
 
     registerServiceWorker();
 

@@ -3,8 +3,7 @@ import axios from 'axios';
 
 
 
-const API_URL = process.env.REACT_APP_API_URL_PRODUCTION
-;
+const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
 //REACT_APP_API_URL_LOCAL
 //REACT_APP_API_URL_PRODUCTION
 
