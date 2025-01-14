@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts, saveProduct } from "../Slice/productoSlice";
 import Tarjetas from "../Componentes/Tarjetas";
 import TarjetasEdit from "../Componentes/TarjetasEdit";
+import { toast } from "react-toastify";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const LaserScanner = () => {
@@ -54,20 +55,17 @@ const LaserScanner = () => {
 
 
   const handleSaveProduct = () => {
-    const productToSave = {
-      ...editingProduct,
-      price: editingProduct.price || 0, // Asegura un precio por defecto (0 si no se proporciona)
-      image: editingProduct.image || null, // Asegura que sea null si no hay imagen
-      description: editingProduct.description || "", // Asegura una cadena vacía si no hay descripción
-    };
+    const productToSave = { ...editingProduct /* ... */ };
   
     dispatch(saveProduct(productToSave))
       .then((action) => {
         if (action.type === "products/saveProduct/fulfilled") {
-          alert(`Producto "${editingProduct.name}" guardado con éxito.`);
-          setEditingProduct(null); // Limpiar el estado de edición
+          // En vez de alert:
+          toast.success(`Producto "${editingProduct.name}" guardado con éxito`);
+          
+          setEditingProduct(null);
         } else {
-          alert("Error al guardar el producto.");
+          toast.error("Error al guardar el producto.");
         }
       });
   };

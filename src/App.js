@@ -12,6 +12,7 @@ import Cart from "./Componentes/Cart";
 import ListaOrdenes from "./Componentes/ListaOrdenes"; // Reemplazamos por el nuevo componente
 import LaserScanner from "./Componentes/CardPaymentForm";
 import WebSocketProvider from "./Componentes/WebSocketProvider"; // Importar el WebSocketProvider
+import { ToastContainer } from "react-toastify";
 
 const publicVapidKey = "BHbacXlHjFUevRaZ4Y0G58ELSjPHf3jAITfhNoxJEKzMCY8-SGCZQNtkGdOU91ozHDSd9kW8me0k9RhAiSESmRU";
 
@@ -39,20 +40,20 @@ const AppWrapper = () => {
         try {
           console.log("Intentando registrar el Service Worker...");
           const registration = await navigator.serviceWorker.register("/MercadoYa/sw.js");
-    
+
           console.log("Service Worker registrado con éxito:", registration);
-    
+
           const permission = await Notification.requestPermission();
           if (permission !== "granted") {
             console.warn("Permiso de notificaciones denegado.");
             return;
           }
-    
+
           const subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
           });
-    
+
           await fetch(`${API_URL}/subscribe`, {
             method: "POST",
             headers: {
@@ -61,7 +62,7 @@ const AppWrapper = () => {
             credentials: "include", // Incluye cookies y credenciales
             body: JSON.stringify(subscription),
           });
-    
+
           console.log("Suscripción registrada con éxito:", subscription);
         } catch (error) {
           console.error("Error al registrar el Service Worker o suscripción:", error);
@@ -70,7 +71,7 @@ const AppWrapper = () => {
         console.warn("El navegador no soporta Service Workers.");
       }
     };
-    
+
 
     registerServiceWorker();
 
@@ -115,6 +116,17 @@ const App = () => {
       <WebSocketProvider>
         <Router basename="/MercadoYa">
           <AppWrapper />
+          <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable
+            pauseOnHover
+          />
         </Router>
       </WebSocketProvider>
     </Provider>
