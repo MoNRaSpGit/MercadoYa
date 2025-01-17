@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { confirmarPedidoAsync } from '../Slice/pedidoSlice';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { confirmarPedidoAsync } from "../Slice/pedidoSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -10,19 +10,18 @@ const Cart = () => {
   const loading = useSelector((state) => state.pedidos.loading);
 
   const { cart } = useSelector((state) => state.products);
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [cashGiven, setCashGiven] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [cashGiven, setCashGiven] = useState("");
   const [change, setChange] = useState(0);
 
-  // Calcula el total del carrito
   const total = cart.reduce((acc, product) => acc + parseFloat(product.price), 0);
 
   const handleConfirmarCompra = () => {
     if (cart.length === 0) {
-      alert('El carrito está vacío');
+      alert("El carrito está vacío");
       return;
     }
-  
+
     const nuevoPedido = {
       userId: 1, // Cambia esto por el ID real del usuario autenticado
       products: cart.map((producto) => ({
@@ -31,24 +30,22 @@ const Cart = () => {
         price: producto.price,
       })),
     };
-  
+
     dispatch(confirmarPedidoAsync(nuevoPedido))
       .unwrap()
       .then(() => {
-        console.log('Pedido confirmado y agregado al backend y store global.');
-        navigate('/ordenes'); // Navega después de confirmar
+        console.log("Pedido confirmado y agregado al backend y store global.");
+        navigate("/ordenes"); // Navega después de confirmar
       })
       .catch((error) => {
-        console.error('Error al confirmar el pedido:', error);
+        console.error("Error al confirmar el pedido:", error);
       });
   };
-  
-  
 
   const handlePaymentChange = (event) => {
     const method = event.target.value;
     setPaymentMethod(method);
-    setCashGiven('');
+    setCashGiven("");
     setChange(0); // Reinicia valores si se cambia el método de pago
   };
 
@@ -61,8 +58,8 @@ const Cart = () => {
   if (cart.length === 0) {
     return (
       <div className="text-center mt-4">
-        <p>Tu carrito está vacío.</p>
-        <Link to="/" className="btn btn-primary">
+        <p className="fs-5 text-muted">Tu carrito está vacío.</p>
+        <Link to="/" className="btn btn-dark btn-lg">
           Volver a la Lista de Productos
         </Link>
       </div>
@@ -71,12 +68,12 @@ const Cart = () => {
 
   return (
     <div className="container mt-4">
-      <h2 className="text-center mb-4">Carrito de Compras</h2>
+      <h2 className="text-center mb-4 text-primary">Carrito de Compras</h2>
 
       {/* Productos en el carrito */}
-      <div className="table-responsive">
-        <table className="table table-bordered">
-          <thead>
+      <div className="table-responsive shadow-sm p-3 mb-4 bg-body-tertiary rounded">
+        <table className="table table-bordered table-hover align-middle">
+          <thead className="table-dark">
             <tr>
               <th>Producto</th>
               <th>Precio</th>
@@ -99,12 +96,12 @@ const Cart = () => {
 
       {/* Total */}
       <div className="text-end mt-3">
-        <h4>Total: ${total.toFixed(2)}</h4>
+        <h4 className="text-success">Total: ${total.toFixed(2)}</h4>
       </div>
 
       {/* Selección del método de pago */}
       <div className="mt-4">
-        <h5>Método de Pago</h5>
+        <h5 className="text-secondary">Método de Pago</h5>
         <div className="form-check">
           <input
             className="form-check-input"
@@ -135,8 +132,8 @@ const Cart = () => {
 
       {/* Detalles del Método de Pago */}
       <div className="mt-4">
-        {paymentMethod === 'transfer' && (
-          <div className="card">
+        {paymentMethod === "transfer" && (
+          <div className="card border-primary">
             <div className="card-body">
               <h5 className="card-title">Datos para Transferencia</h5>
               <p className="card-text">Tarjeta Prex</p>
@@ -146,7 +143,7 @@ const Cart = () => {
           </div>
         )}
 
-        {paymentMethod === 'cash' && (
+        {paymentMethod === "cash" && (
           <div className="mt-4">
             <label htmlFor="cashGiven" className="form-label">
               Ingrese el monto entregado:
@@ -161,7 +158,7 @@ const Cart = () => {
             />
             {cashGiven > 0 && (
               <div className="mt-3">
-                <h5>
+                <h5 className="text-info">
                   {change >= 0
                     ? `Su cambio será de $${change.toFixed(2)}`
                     : `Falta $${Math.abs(change).toFixed(2)} para completar el total`}
@@ -176,15 +173,18 @@ const Cart = () => {
       <div className="text-center mt-4">
         <button
           onClick={handleConfirmarCompra}
-          className="btn btn-success"
+          className="btn btn-outline-success btn-lg me-3"
           disabled={loading}
         >
-          {loading ? 'Confirmando...' : 'Confirmar Compra'}
+          {loading ? "Confirmando..." : "Confirmar Compra"}
         </button>
-        <button onClick={() => navigate('/ordenes')} className="btn btn-primary mt-3">
+        <button
+          onClick={() => navigate("/ordenes")}
+          className="btn btn-outline-dark btn-lg me-3"
+        >
           Ver Ordenes
         </button>
-        <Link to="/" className="btn btn-secondary btn-lg">
+        <Link to="/" className="btn btn-outline-secondary btn-lg">
           Volver a la Lista de Productos
         </Link>
       </div>

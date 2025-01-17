@@ -1,16 +1,139 @@
+/********************************************************
+ * ESTILOS GENERALES
+ ********************************************************/
+.card-product {
+  border: 1px solid #000 !important;
+  /* Borde negro */
+  border-radius: 8px;
+  transition: transform 0.2s ease-in-out;
+  background-color: #fff;
+}
+
+.card-product:hover {
+  transform: scale(1.02);
+}
+
+/* Contenedor principal de la imagen */
 .image-container {
-    width: 100%;
-    height: 200px; /* Altura fija para mantener uniformidad */
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f8f9fa; /* Fondo gris claro */
-  }
-  
-  .image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Asegura que la imagen se ajuste sin recorte */
-  }
-  
+  position: relative;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+  height: 200px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ajuste de la imagen dentro del contenedor */
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Mantiene la proporción de la imagen */
+  filter: brightness(0.98);
+  /* Ajusta si quieres un poco menos de brillo */
+  background-color: #fff;
+  /* Fondo blanco detrás de la imagen */
+  border-radius: 0 0 10px 10px;
+  /* Solo si deseas redondear la parte inferior */
+}
+
+/* Etiqueta de descuento en la esquina */
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #eb2f06;
+  /* Rojo vivo */
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/********************************************************
+ * TEXTOS Y TITULOS
+ ********************************************************/
+.card-body {
+  padding: 1rem;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+.card-text {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+/********************************************************
+ * BOTONES
+ ********************************************************/
+.btn {
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.btn-success {
+  background-color: #d50000;
+  /* Rojo tipo “Agregar” */
+  border-color: #d50000;
+}
+
+.btn-success:hover {
+  background-color: #b30000;
+  border-color: #b30000;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+  border-color: #c0392b;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+/********************************************************
+ * PRECIOS
+ ********************************************************/
+.text-decoration-line-through {
+  opacity: 0.7;
+}
+
+/********************************************************
+ * EJEMPLO DE PLACEHOLDER SIN IMAGEN
+ ********************************************************/
+.no-image-placeholder {
+  height: 200px;
+  background: #e9ecef;
+  font-size: 1.2rem;
+  color: #6c757d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+
+.btn-agregar {
+  background-color: #8B0000; /* Rojo oscuro */
+  border-color: #8B0000;
+  color: #fff;
+}
+
+.btn-agregar:hover {
+  background-color: #6b0000; /* Un poco más oscuro al hacer hover */
+  border-color: #6b0000;
+}

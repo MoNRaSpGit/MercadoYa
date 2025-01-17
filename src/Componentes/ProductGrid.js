@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import "../Css/ProductGrid.css";
+
+// Importar tu CaruselOfertas
+import CaruselOfertas from "../Componentes/CaruselOfertas";
 import Tarjetas from "../Componentes/Tarjetas";
 import TarjetasEdit from "../Componentes/TarjetasEdit";
 
@@ -15,7 +18,8 @@ const ProductGrid = () => {
   );
 
   const [editingProduct, setEditingProduct] = useState(null);
-  const [searchText, setSearchText] = useState(""); // Estado para la barra de búsqueda
+  const [searchText, setSearchText] = useState("");
+  const [showAdminButtons, setShowAdminButtons] = useState(true);
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
@@ -33,7 +37,6 @@ const ProductGrid = () => {
   };
 
   const handleDeleteProduct = (id) => {
-    console.log("ID del producto a eliminar:", id); // Asegúrate de que sea correcto
     if (window.confirm("¿Estás seguro de que deseas eliminar este producto?")) {
       dispatch(deleteProduct(id)).then((action) => {
         if (action.type === "products/deleteProduct/fulfilled") {
@@ -44,13 +47,25 @@ const ProductGrid = () => {
       });
     }
   };
-  
 
-  // Filtrar productos por nombre según el texto ingresado en el buscador
+  // Filtrar productos por nombre
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  // Añadir descuentos y ordenar productos
+  const sortedProducts = [...filteredProducts]
+    .map((product) => ({
+      ...product,
+      discount: Math.random() > 0.7 ? 20 : null, // ~30% con descuento
+    }))
+    .sort((a, b) => {
+      if (!a.image && b.image) return 1;
+      if (a.image && !b.image) return -1;
+      return Math.random() - 0.5;
+    });
+
+  // Manejo de carga y errores
   if (loading) {
     return <div className="text-center">Cargando productos...</div>;
   }
@@ -65,40 +80,60 @@ const ProductGrid = () => {
 
   return (
     <div className="container mt-4">
-      <div className="d-flex justify-content-between mb-3">
-        <input
-          type="text"
-          className="form-control w-50"
-          placeholder="Buscar productos por nombre..."
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
-        <Link to="/laser-scanner" className="btn btn-secondary">
-          Ir a Escáner Láser
-        </Link>
-        <Link to="/cart" className="btn btn-outline-primary position-relative">
-          <FontAwesomeIcon icon={faShoppingCart} size="lg" />
-          {cart.length > 0 && (
-            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              {cart.length}
-            </span>
-          )}
-        </Link>
+      {/* Encabezado Fijo / Sticky */}
+      <div className="sticky-top bg-white pt-3 pb-2" style={{ zIndex: 1000 }}>
+        <div className="d-flex justify-content-between mb-3">
+          <input
+            type="text"
+            className="form-control w-50"
+            placeholder="Buscar productos por nombre..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+          <Link to="/laser-scanner" className="btn btn-secondary">
+            Ir a Escáner Láser
+          </Link>
+          <Link to="/cart" className="btn btn-outline-primary position-relative">
+            <FontAwesomeIcon icon={faShoppingCart} size="lg" />
+            {cart.length > 0 && (
+              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {cart.length}
+              </span>
+            )}
+          </Link>
+        </div>
+
+        <button
+          className="btn btn-warning"
+          onClick={() => setShowAdminButtons(!showAdminButtons)}
+        >
+          {showAdminButtons
+            ? "Ocultar Editar/Eliminar"
+            : "Mostrar Editar/Eliminar"}
+        </button>
       </div>
 
+      {/* Carrusel de ofertas */}
+      <CaruselOfertas products={sortedProducts} />
+
+      {/* Título */}
       <h2 className="text-center mb-4">Productos del Supermercado</h2>
+
+      {/* Grid de productos */}
       <div className="row">
-        {filteredProducts.map((product) => (
+        {sortedProducts.map((product) => (
           <Tarjetas
             key={product.id}
             product={product}
             onAddToCart={handleAddToCart}
-            onEdit={(product) => setEditingProduct(product)}
-            onDelete={handleDeleteProduct} // Pasamos la función para eliminar
+            onEdit={(prod) => setEditingProduct(prod)}
+            onDelete={handleDeleteProduct}
+            showAdminButtons={showAdminButtons}
           />
         ))}
       </div>
 
+      {/* Modal Editar */}
       {editingProduct && (
         <TarjetasEdit
           product={editingProduct}

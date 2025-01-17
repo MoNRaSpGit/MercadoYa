@@ -14,6 +14,8 @@ import LaserScanner from "./Componentes/CardPaymentForm";
 import WebSocketProvider from "./Componentes/WebSocketProvider"; // Importar el WebSocketProvider
 import { ToastContainer } from "react-toastify";
 
+
+
 const publicVapidKey = "BHbacXlHjFUevRaZ4Y0G58ELSjPHf3jAITfhNoxJEKzMCY8-SGCZQNtkGdOU91ozHDSd9kW8me0k9RhAiSESmRU";
 
 const AppWrapper = () => {
