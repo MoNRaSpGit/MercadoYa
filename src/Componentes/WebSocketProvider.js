@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { io } from "socket.io-client";
 import { añadirPedido, actualizarEstadoPedido, fetchPedidosAsync } from "../Slice/pedidoSlice"; // IMPORTA fetchPedidosAsync
 
-const SOCKET_URL = "https://mercadoya-3.onrender.com"; // Cambia la URL según tu entorno
+const SOCKET_URL = "https://mercadoya-back-2.onrender.com"; // Cambia la URL según tu entorno
 
-// https://mercadoya-3.onrender.com
+// https://mercadoya-back-2.onrender.com
 // http://localhost:3001
  
 
