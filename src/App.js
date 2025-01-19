@@ -19,7 +19,7 @@ import { ToastContainer } from "react-toastify";
 const publicVapidKey = "BHbacXlHjFUevRaZ4Y0G58ELSjPHf3jAITfhNoxJEKzMCY8-SGCZQNtkGdOU91ozHDSd9kW8me0k9RhAiSESmRU";
 
 const AppWrapper = () => {
-  const API_URL = "http://localhost:3001";
+  const API_URL = "https://mercadoya-3.onrender.com";
 
   //http://localhost:3001
   //https://mercadoya-3.onrender.com
