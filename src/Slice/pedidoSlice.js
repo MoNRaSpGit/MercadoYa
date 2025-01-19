@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
+console.log("soy la direcion de production   -->" , API_URL)
 
 // Thunk para confirmar el pedido y enviarlo al backend
 export const confirmarPedidoAsync = createAsyncThunk(

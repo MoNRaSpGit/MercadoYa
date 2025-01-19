@@ -4,6 +4,7 @@ import axios from 'axios';
 
 
 const API_URL = process.env.REACT_APP_API_URL_PRODUCTION;
+console.log("soy la direcion de production   -->" , API_URL)
 //REACT_APP_API_URL_LOCAL
 //REACT_APP_API_URL_PRODUCTION
 
