@@ -20,9 +20,9 @@ const LaserScanner = () => {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  const handleDeleteProduct = (id) => {
+  /*const handleDeleteProduct = (id) => {
     setScannedProducts((prev) => prev.filter((product) => product.barcode !== id));
-  };
+  };*/
 
   const handleScannedBarcode = (barcode) => {
     const existingProduct = globalProducts.find((product) => product.barcode === barcode);
