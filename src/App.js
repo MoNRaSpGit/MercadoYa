@@ -28,7 +28,7 @@ const AppWrapper = () => {
 
   useEffect(() => {
     console.log("App: Iniciando aplicación. Cargando productos y órdenes...");
-    /*dispatch(fetchProducts())
+    dispatch(fetchProducts())
       .unwrap()
       .then(() => console.log("App: Productos cargados con éxito"))
       .catch((err) => console.error("App: Error al cargar productos", err));
@@ -37,7 +37,7 @@ const AppWrapper = () => {
       .unwrap()
       .then(() => console.log("App: Órdenes cargadas con éxito"))
       .catch((err) => console.error("App: Error al cargar órdenes", err));
-      */
+      
 
     // Registrar el Service Worker
     const registerServiceWorker = async () => {
