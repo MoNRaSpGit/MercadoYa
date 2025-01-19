@@ -1,139 +1,131 @@
-/********************************************************
- * ESTILOS GENERALES
- ********************************************************/
-.card-product {
-  border: 1px solid #000 !important;
-  /* Borde negro */
+.custom-card {
+  border: 1px solid #000;
   border-radius: 8px;
-  transition: transform 0.2s ease-in-out;
   background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: transform 0.2s ease-in-out;
 }
 
-.card-product:hover {
+.custom-card:hover {
   transform: scale(1.02);
 }
 
-/* Contenedor principal de la imagen */
-.image-container {
-  position: relative;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #ddd;
+.custom-image-container {
+  width: 100%;
   height: 200px;
-  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+  background-color: #f9f9f9;
 }
 
-/* Ajuste de la imagen dentro del contenedor */
-.image-container img {
+.custom-card-image {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  /* Mantiene la proporción de la imagen */
-  filter: brightness(0.98);
-  /* Ajusta si quieres un poco menos de brillo */
-  background-color: #fff;
-  /* Fondo blanco detrás de la imagen */
-  border-radius: 0 0 10px 10px;
-  /* Solo si deseas redondear la parte inferior */
 }
 
-/* Etiqueta de descuento en la esquina */
-.discount-badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: #eb2f06;
-  /* Rojo vivo */
-  color: #fff;
-  padding: 5px 8px;
-  border-radius: 4px;
-  font-size: 0.9rem;
+.custom-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.custom-card-title {
+  font-size: 1.1rem;
   font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-}
-
-/********************************************************
- * TEXTOS Y TITULOS
- ********************************************************/
-.card-body {
-  padding: 1rem;
-}
-
-.card-title {
-  font-size: 1rem;
-  font-weight: bold;
-  margin: 0.5rem 0;
+  margin-bottom: 5px;
   color: #333;
 }
 
-.card-text {
-  font-size: 0.85rem;
+.custom-card-description {
+  font-size: 0.9rem;
   color: #666;
-  margin-bottom: 0.5rem;
 }
 
-/********************************************************
- * BOTONES
- ********************************************************/
-.btn {
-  border-radius: 20px;
-  font-size: 0.8rem;
+.custom-card-price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #28a745;
 }
 
-.btn-success {
-  background-color: #d50000;
-  /* Rojo tipo “Agregar” */
-  border-color: #d50000;
-}
-
-.btn-success:hover {
-  background-color: #b30000;
-  border-color: #b30000;
-}
-
-.btn-danger:hover {
-  background-color: #c0392b;
-  border-color: #c0392b;
-}
-
-.btn-primary:hover {
-  background-color: #0069d9;
-  border-color: #0062cc;
-}
-
-/********************************************************
- * PRECIOS
- ********************************************************/
-.text-decoration-line-through {
-  opacity: 0.7;
-}
-
-/********************************************************
- * EJEMPLO DE PLACEHOLDER SIN IMAGEN
- ********************************************************/
-.no-image-placeholder {
-  height: 200px;
-  background: #e9ecef;
-  font-size: 1.2rem;
-  color: #6c757d;
+.custom-card-buttons {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  gap: 10px;
+  margin-top: auto;
 }
 
+.custom-button {
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
 
-
-
-.btn-agregar {
-  background-color: #8B0000; /* Rojo oscuro */
-  border-color: #8B0000;
+.custom-button.primary {
+  background-color: #007bff;
   color: #fff;
 }
 
-.btn-agregar:hover {
-  background-color: #6b0000; /* Un poco más oscuro al hacer hover */
-  border-color: #6b0000;
+.custom-button.primary:hover {
+  background-color: #0056b3;
 }
+
+.custom-button.danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.custom-button.danger:hover {
+  background-color: #c82333;
+}
+
+.custom-button.agregar {
+  background-color: #8B0000;
+  color: #fff;
+}
+
+.custom-button.agregar:hover {
+  background-color: #6b0000;
+}
+
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.quantity-display {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+}
+
+.custom-button.decrement,
+.custom-button.increment {
+  background-color: #8B0000;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.custom-button.decrement:hover,
+.custom-button.increment:hover {
+  background-color: #6b0000;
+}
+

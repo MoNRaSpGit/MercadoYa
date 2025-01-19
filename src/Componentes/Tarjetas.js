@@ -1,84 +1,95 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import "../Css/Tarjetas.css";
 
 const Tarjetas = ({ product, onEdit, onAddToCart, onDelete, showAdminButtons }) => {
-  // 1. Verificar si el producto tiene descuento
-  const hasDiscount = product.discount && product.discount > 0;
+  const [quantity, setQuantity] = useState(0); // Estado para manejar la cantidad del producto
 
-  // 2. Calcular precios
+  const handleIncrement = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 0) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (quantity === 0) {
+      setQuantity(1); // Inicializa la cantidad al agregar
+      onAddToCart(product); // Ejecuta la acción de agregar al carrito
+    }
+  };
+
   const originalPrice = Number(product.price ?? 0);
-  const discountedPrice = hasDiscount
-    ? (originalPrice * (1 - product.discount / 100)).toFixed(2)
-    : originalPrice.toFixed(2);
 
   return (
     <div className="col-md-4 mb-4">
-      <div className="card card-product h-100 shadow border-0 position-relative">
-        
-        {/* Contenedor de imagen con badge de descuento */}
-        <div className="image-container position-relative">
-          {hasDiscount && (
-            <div className="discount-badge">-{product.discount}%</div>
-          )}
+      <div className="custom-card">
+        {/* Contenedor de la imagen */}
+        <div className="custom-image-container">
           <img
             src={product.image || "https://via.placeholder.com/150"}
-            className="card-img-top"
+            className="custom-card-image"
             alt={product.name || "Producto"}
           />
         </div>
 
         {/* Contenido de la tarjeta */}
-        <div className="card-body d-flex flex-column">
-          <h5 className="card-title text-truncate">{product.name || "Sin nombre"}</h5>
-          <p className="card-text text-muted small">
+        <div className="custom-card-body">
+          <h5 className="custom-card-title">{product.name || "Sin nombre"}</h5>
+          <p className="custom-card-description">
             {product.description || "Descripción pendiente."}
           </p>
-
-          {/* Mostrar precios */}
-          <p className="card-text">
-            {hasDiscount ? (
-              <>
-                <span className="text-muted text-decoration-line-through me-2">
-                  ${originalPrice.toFixed(2)}
-                </span>
-                <span className="text-success fw-bold">
-                  ${discountedPrice}
-                </span>
-              </>
-            ) : (
-              <span className="text-success fw-bold">
-                ${originalPrice.toFixed(2)}
-              </span>
-            )}
+          <p className="custom-card-price">
+            ${originalPrice.toFixed(2)}
           </p>
 
           {/* Botones */}
-          <div className="mt-auto d-flex gap-2">
+          <div className="custom-card-buttons">
             {showAdminButtons && (
               <>
                 <button
-                  className="btn btn-sm btn-primary"
+                  className="custom-button primary"
                   onClick={() => onEdit(product)}
                 >
                   Editar
                 </button>
                 <button
-                  className="btn btn-sm btn-danger"
+                  className="custom-button danger"
                   onClick={() => onDelete(product.id)}
                 >
                   Eliminar
                 </button>
               </>
             )}
-            <button
-              className="btn btn-sm btn-agregar"
-              onClick={() => onAddToCart(product)}
-            >
-              <FontAwesomeIcon icon={faShoppingCart} className="me-1" />
-              Agregar
-            </button>
+            {quantity === 0 ? (
+              <button
+                className="custom-button agregar"
+                onClick={handleAddToCart}
+              >
+                <FontAwesomeIcon icon={faShoppingCart} className="me-1" />
+                Agregar
+              </button>
+            ) : (
+              <div className="quantity-controls">
+                <button
+                  className="custom-button decrement"
+                  onClick={handleDecrement}
+                >
+                  -
+                </button>
+                <span className="quantity-display">{quantity}</span>
+                <button
+                  className="custom-button increment"
+                  onClick={handleIncrement}
+                >
+                  +
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

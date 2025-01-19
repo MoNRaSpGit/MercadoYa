@@ -1,52 +1,55 @@
 import React from "react";
+import "../Css/TarjetasEdit.css";
 
 const TarjetasEdit = ({ product, onChange, onCancel, onSave }) => {
   return (
-    <div className="modal show d-block">
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">
+    <div className="custom-modal">
+      <div className="custom-modal-dialog">
+        <div className="custom-modal-content">
+          <div className="custom-modal-header">
+            <h5 className="custom-modal-title">
               {product.id ? "Editar Producto" : "Agregar Producto"}
             </h5>
             <button
               type="button"
-              className="btn-close"
+              className="custom-button close"
               onClick={onCancel}
-            ></button>
+            >
+              X
+            </button>
           </div>
-          <div className="modal-body">
-            <div className="mb-3">
-              <label className="form-label">Nombre</label>
+          <div className="custom-modal-body">
+            <div className="custom-form-group">
+              <label>Nombre</label>
               <input
                 type="text"
-                className="form-control"
+                className="custom-input"
                 value={product.name}
                 onChange={(e) => onChange("name", e.target.value)}
               />
             </div>
-            <div className="mb-3">
-              <label className="form-label">Precio</label>
+            <div className="custom-form-group">
+              <label>Precio</label>
               <input
                 type="number"
-                className="form-control"
+                className="custom-input"
                 value={product.price}
                 onChange={(e) => onChange("price", parseFloat(e.target.value))}
               />
             </div>
-            <div className="mb-3">
-              <label className="form-label">Descripción</label>
+            <div className="custom-form-group">
+              <label>Descripción</label>
               <textarea
-                className="form-control"
+                className="custom-input"
                 value={product.description}
                 onChange={(e) => onChange("description", e.target.value)}
               />
             </div>
-            <div className="mb-3">
-              <label className="form-label">Imagen</label>
+            <div className="custom-form-group">
+              <label>Imagen</label>
               <input
                 type="file"
-                className="form-control"
+                className="custom-input"
                 onChange={(e) => {
                   const file = e.target.files[0];
                   const reader = new FileReader();
@@ -60,11 +63,17 @@ const TarjetasEdit = ({ product, onChange, onCancel, onSave }) => {
               />
             </div>
           </div>
-          <div className="modal-footer">
-            <button className="btn btn-secondary" onClick={onCancel}>
+          <div className="custom-modal-footer">
+            <button
+              className="custom-button secondary"
+              onClick={onCancel}
+            >
               Cancelar
             </button>
-            <button className="btn btn-success" onClick={onSave}>
+            <button
+              className="custom-button success"
+              onClick={onSave}
+            >
               {product.id ? "Guardar Cambios" : "Guardar en la BDD"}
             </button>
           </div>

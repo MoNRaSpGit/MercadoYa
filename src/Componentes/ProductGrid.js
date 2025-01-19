@@ -4,9 +4,13 @@ import { addToCart, saveProduct, deleteProduct } from "../Slice/productoSlice";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import "../Css/ProductGrid.css";
 
-// Importar tu CaruselOfertas
+// Importar los estilos CSS relevantes
+import "../Css/ProductGrid.css";
+import "../Css/Buttons.css";
+//import "../Css/Grid.css";
+
+// Importar componentes específicos
 import CaruselOfertas from "../Componentes/CaruselOfertas";
 import Tarjetas from "../Componentes/Tarjetas";
 import TarjetasEdit from "../Componentes/TarjetasEdit";
@@ -48,24 +52,18 @@ const ProductGrid = () => {
     }
   };
 
-  // Filtrar productos por nombre
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  // Añadir descuentos y ordenar productos
-  const sortedProducts = [...filteredProducts]
-    .map((product) => ({
-      ...product,
-      discount: Math.random() > 0.7 ? 20 : null, // ~30% con descuento
-    }))
-    .sort((a, b) => {
-      if (!a.image && b.image) return 1;
-      if (a.image && !b.image) return -1;
-      return Math.random() - 0.5;
-    });
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (!a.image && b.image) return 1;
+    if (a.image && !b.image) return -1;
+    // En lugar de ordenar al azar, deja la lista tal cual
+    return 0;
+  });
+  
 
-  // Manejo de carga y errores
   if (loading) {
     return <div className="text-center">Cargando productos...</div>;
   }
@@ -80,7 +78,7 @@ const ProductGrid = () => {
 
   return (
     <div className="container mt-4">
-      {/* Encabezado Fijo / Sticky */}
+      {/* Encabezado Sticky */}
       <div className="sticky-top bg-white pt-3 pb-2" style={{ zIndex: 1000 }}>
         <div className="d-flex justify-content-between mb-3">
           <input
@@ -113,10 +111,9 @@ const ProductGrid = () => {
         </button>
       </div>
 
-      {/* Carrusel de ofertas */}
+      {/* Carrusel de Ofertas */}
       <CaruselOfertas products={sortedProducts} />
 
-      {/* Título */}
       <h2 className="text-center mb-4">Productos del Supermercado</h2>
 
       {/* Grid de productos */}
@@ -133,7 +130,6 @@ const ProductGrid = () => {
         ))}
       </div>
 
-      {/* Modal Editar */}
       {editingProduct && (
         <TarjetasEdit
           product={editingProduct}

@@ -1,0 +1,12 @@
+/********************************************************
+ * Colores - Tema general
+ ********************************************************/
+ :root {
+    --color-primary: #0069d9;
+    --color-secondary: #6c757d;
+    --color-danger: #dc3545;
+    --color-success: #198754;
+    --color-dark: #343a40;
+    --color-light: #f8f9fa;
+  }
+  

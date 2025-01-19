@@ -111,11 +111,11 @@ const productSlice = createSlice({
       .addCase(saveProduct.fulfilled, (state, action) => {
         const index = state.items.findIndex((item) => item.id === action.payload.id);
         if (index !== -1) {
-          state.items[index] = action.payload;
+          state.items[index] = action.payload; // Actualiza el producto existente
         } else {
-          state.items.push(action.payload);
+          state.items.push(action.payload); // Agrega un nuevo producto
         }
-      })
+      })      
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.items = state.items.filter((item) => item.id !== action.payload);
       })
